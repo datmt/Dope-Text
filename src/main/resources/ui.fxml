@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+
+<BorderPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.datmt.dope_text.Controller">
+   <center>
+      <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+        <tabs>
+          <Tab text="New text">
+               <content>
+                  <VBox fx:id="startTab" />
+               </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+   </center>
+   <left>
+      <VBox prefWidth="250.0" BorderPane.alignment="CENTER">
+         <children>
+            <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+              <tabs>
+                <Tab text="Current">
+                     <content>
+                        <ListView fx:id="currentFiles" />
+                     </content>
+                </Tab>
+                <Tab text="History">
+                     <content>
+                        <ListView fx:id="historyFiles" prefHeight="200.0" prefWidth="200.0" />
+                     </content>
+                </Tab>
+                  <Tab text="Settings">
+                     <content>
+                        <VBox prefHeight="200.0" prefWidth="100.0" />
+                     </content>
+                  </Tab>
+              </tabs>
+            </TabPane>
+            <HBox>
+               <children>
+                  <Button mnemonicParsing="false" onAction="#newFile" text="New" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </left>
+</BorderPane>

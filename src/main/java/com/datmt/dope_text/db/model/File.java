@@ -16,6 +16,7 @@ public class File {
     String content;
     Long createdTime;
     Long updatedTime;
+    int isOpen;
 
     @Override
     public String toString() {

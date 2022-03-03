@@ -27,4 +27,14 @@ public class CurrentFileManager {
 
 
     }
+
+    public static void saveFileBeforeSelectionChange(File file) throws SQLException {
+
+        if (file.getContent().equals(StaticResource.codeArea.getText()))
+            return;
+
+        DB db = new DB();
+        file.setContent(StaticResource.codeArea.getText());
+        db.updateFile(file.getId(), StaticResource.codeArea.getText());
+    }
 }

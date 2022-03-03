@@ -3,6 +3,7 @@ package com.datmt.dope_text.fx;
 
 import com.datmt.dope_text.db.DB;
 import com.datmt.dope_text.db.model.File;
+import com.datmt.dope_text.manager.StaticResource;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.util.StringConverter;
 
@@ -30,6 +31,7 @@ public class FileListCell extends TextFieldListCell<File> {
                 File file = getItem();
                 file.setFileName(string);
                 try {
+                    StaticResource.stage.setTitle(file.getFileName() + " | Dope Text");
                     DB db = new DB();
                     db.updateFileName(file.getId(), string);
                 } catch (SQLException ex) {

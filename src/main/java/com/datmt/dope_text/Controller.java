@@ -5,6 +5,8 @@ import com.datmt.dope_text.db.model.File;
 import com.datmt.dope_text.fx.FileListCell;
 import com.datmt.dope_text.manager.CurrentFileManager;
 import com.datmt.dope_text.manager.StaticResource;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
@@ -13,6 +15,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Priority;
@@ -23,6 +26,8 @@ import org.fxmisc.richtext.LineNumberFactory;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
 
 public class Controller {
 
@@ -33,9 +38,12 @@ public class Controller {
     VBox startTab;
 
     @FXML
+    TextField fileFilterTF;
+
+    @FXML
     ListView<File> currentFiles;
 
-    List<File> allFiles;
+    List<File> allCurrentlyOpenFiles;
 
     @FXML
     public void initialize() throws SQLException {
@@ -44,14 +52,14 @@ public class Controller {
         codeArea.setContextMenu(new DefaultContextMenu());
         codeArea.setId("codeArea");
         VBox.setVgrow(codeArea, Priority.ALWAYS);
-        Label tutorial = new Label("Ctrl+S: Save, Ctrl+N: new, Ctrl+N: Close");
+        Label tutorial = new Label("Ctrl+S: Save, Ctrl+N: new, Ctrl+W: Close");
 
         startTab.getChildren().addAll(codeArea, tutorial);
 
         DB db = new DB();
 
-        allFiles = db.getAllFiles();
-        currentFiles.setItems(FXCollections.observableList(allFiles));
+        allCurrentlyOpenFiles = db.getAllOpenedFiles();
+        currentFiles.setItems(FXCollections.observableList(allCurrentlyOpenFiles));
         currentFiles.setEditable(true);
 
 
@@ -68,6 +76,17 @@ public class Controller {
         loadLastOpenedFile();
 
         autosaveJob();
+        registerFilterEvent();
+
+    }
+
+    private void registerFilterEvent() {
+        fileFilterTF.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                currentFiles.setItems(FXCollections.observableList(allCurrentlyOpenFiles.stream().filter(t -> t.getFileName().toUpperCase(Locale.ROOT).contains(newValue.toUpperCase(Locale.ROOT))).collect(Collectors.toList())));
+            }
+        });
     }
 
 
@@ -76,22 +95,16 @@ public class Controller {
         File f = null;
         f = db.getLastOpenedFile();
         if (f == null) {
-            f = allFiles.size() > 0 ? allFiles.get(0) : null;
+            f = allCurrentlyOpenFiles.size() > 0 ? allCurrentlyOpenFiles.get(0) : null;
         }
 
         if (f != null) {
             File finalF = f;
-            currentFiles.getSelectionModel().select(allFiles.stream().filter(t -> t.getId().equals(finalF.getId())).findFirst().orElse(null));
+            currentFiles.getSelectionModel().select(allCurrentlyOpenFiles.stream().filter(t -> t.getId().equals(finalF.getId())).findFirst().orElse(null));
             CurrentFileManager.updateCurrentlyOpenedFile(f);
         }
 
 
-    }
-
-    private void saveFileBeforeSelectionChange(File file) throws SQLException {
-        DB db = new DB();
-        file.setContent(StaticResource.codeArea.getText());
-        db.updateFile(file.getId(), StaticResource.codeArea.getText());
     }
 
     private void currentFilesListViewEventHandler() {
@@ -100,13 +113,16 @@ public class Controller {
             @Override
             public void handle(MouseEvent event) {
                 File f = currentFiles.getSelectionModel().getSelectedItem();
+                if (f == null) {
+                    return;
+                }
 
                 if (f.equals(StaticResource.currentFile)) {
                     return;
                 }
 
                 try {
-                    saveFileBeforeSelectionChange(StaticResource.currentFile);
+                    CurrentFileManager.saveFileBeforeSelectionChange(StaticResource.currentFile);
                     CurrentFileManager.updateCurrentlyOpenedFile(f);
                 } catch (SQLException e) {
                     e.printStackTrace();

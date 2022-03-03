@@ -55,7 +55,36 @@ public class DB {
                     set.getString("file_name"),
                     set.getString("content"),
                     set.getLong("created_time"),
-                    set.getLong("updated_time")
+                    set.getLong("updated_time"),
+                    set.getInt("is_open")
+
+            ));
+        }
+        closeConnection(connection);
+
+        return files;
+    }
+
+    public List<File> getAllOpenedFiles() throws SQLException {
+        List<File> files = new ArrayList<>();
+
+        Connection connection = getConnection();
+
+        String query = "SELECT * FROM " + FILE_TABLE + " WHERE is_open = 1";
+
+        Statement statement = connection.createStatement();
+        ResultSet set = statement.executeQuery(query);
+
+        while (set.next()) {
+            files.add(new File(
+                    set.getLong("id"),
+                    set.getString("file_hash"),
+                    set.getString("local_path"),
+                    set.getString("file_name"),
+                    set.getString("content"),
+                    set.getLong("created_time"),
+                    set.getLong("updated_time"),
+                    1
 
             ));
         }
@@ -70,6 +99,7 @@ public class DB {
                 "local_path text," +
                 "file_name text," +
                 "content text," +
+                "is_open INTEGER DEFAULT  1," +
                 "created_time INTEGER," +
                 "updated_time INTEGER" +
                 " );";
@@ -177,6 +207,21 @@ public class DB {
         closeConnection(connection);
     }
 
+    public void updateFileOpenStatus(Long fileId, int openStatus) throws SQLException {
+        String sql = "UPDATE " + FILE_TABLE + " SET is_open = ?, updated_time = ? WHERE id = ?";
+        Connection connection = getConnection();
+
+        long updatedTime = Instant.now().getEpochSecond();
+        PreparedStatement statement = connection.prepareStatement(sql);
+
+        statement.setInt(1, openStatus);
+        statement.setLong(2, updatedTime);
+        statement.setLong(3, fileId);
+
+        statement.execute();
+        closeConnection(connection);
+    }
+
 
     public Connection getConnection() throws SQLException {
         initConnection();
@@ -269,7 +314,8 @@ public class DB {
                     set.getString("file_name"),
                     set.getString("content"),
                     set.getLong("created_time"),
-                    set.getLong("updated_time")
+                    set.getLong("updated_time"),
+                    set.getInt("is_open")
 
             );
         }

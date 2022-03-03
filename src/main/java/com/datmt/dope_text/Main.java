@@ -63,6 +63,8 @@ public class Main extends Application {
                     ListView currentFiles = (ListView) scene.lookup("#currentFiles");
 
                     try {
+                        if (StaticResource.currentFile != null)
+                            CurrentFileManager.saveFileBeforeSelectionChange(StaticResource.currentFile);
                         DB db = new DB();
 
                         File f = db.createFile("", "new dope-text-" + UUID.randomUUID().toString().replace("-", "").substring(0, 5));
@@ -77,7 +79,21 @@ public class Main extends Application {
 
                     ke.consume(); // <-- stops passing the event to next node
                 }else if (close.match(ke)) {
-                    System.out.println("Key Pressed: " + close);
+                    ListView<File> currentFiles = (ListView) scene.lookup("#currentFiles");
+                    currentFiles.getItems().remove(currentFiles.getSelectionModel().getSelectedItem());
+                    try {
+                        DB db = new DB();
+                        db.updateFileOpenStatus(StaticResource.currentFile.getId(), 0);
+
+                        if (currentFiles.getItems().size() > 0)
+                            CurrentFileManager.updateCurrentlyOpenedFile(currentFiles.getItems().get(0));
+                        else
+                            StaticResource.codeArea.replaceText("");
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+
+
                     ke.consume(); // <-- stops passing the event to next node
                 }
             }

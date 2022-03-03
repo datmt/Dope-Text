@@ -90,31 +90,44 @@ public class DB {
         closeConnection(connection);
     }
 
-    public boolean createFile(String content, String fileName) throws SQLException {
+    public File createFile(String content, String fileName) throws SQLException {
         String sql = "INSERT INTO " + FILE_TABLE + " (file_hash, file_name, content, created_time, updated_time) VALUES (?, ?, ?, ?, ?)";
         Connection connection = getConnection();
 
         long createdTime = Instant.now().getEpochSecond();
-        PreparedStatement statement = connection.prepareStatement(sql);
+        PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
         statement.setString(1, generateUUID());
         statement.setString(2, fileName);
         statement.setString(3, content);
         statement.setLong(4, createdTime);
         statement.setLong(5, createdTime);
 
-        boolean result = statement.execute();
+        int affectedRows = statement.executeUpdate();
 
+        if (affectedRows == 0) {
+            throw new SQLException("Failed to save file");
+        }
+
+        File f = null;
+
+        try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+            if (generatedKeys.next()) {
+                f = getFileById(generatedKeys.getLong(1));
+            }
+            else {
+                throw new SQLException("Failed to save file");
+            }
+        }
 
         closeConnection(connection);
 
-        return result;
+        return f;
 
 
     }
 
     private String generateUUID() {
         return UUID.randomUUID().toString().replace("-", "");
-
     }
 
 
@@ -148,6 +161,22 @@ public class DB {
         statement.execute();
         closeConnection(connection);
     }
+
+    public void updateFileName(Long fileId, String fileName) throws SQLException {
+        String sql = "UPDATE " + FILE_TABLE + " SET file_name = ?, updated_time = ? WHERE id = ?";
+        Connection connection = getConnection();
+
+        long createdTime = Instant.now().getEpochSecond();
+        PreparedStatement statement = connection.prepareStatement(sql);
+
+        statement.setString(1, fileName);
+        statement.setLong(2, createdTime);
+        statement.setLong(3, fileId);
+
+        statement.execute();
+        closeConnection(connection);
+    }
+
 
     public Connection getConnection() throws SQLException {
         initConnection();

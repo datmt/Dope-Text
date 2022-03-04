@@ -6,8 +6,6 @@ import com.datmt.dope_text.fx.FileListCell;
 import com.datmt.dope_text.helper.TextSearcher;
 import com.datmt.dope_text.manager.CurrentFileManager;
 import com.datmt.dope_text.manager.StaticResource;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
@@ -26,7 +24,6 @@ import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
 
 import java.sql.SQLException;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;

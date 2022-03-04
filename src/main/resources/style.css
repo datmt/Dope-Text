@@ -1,10 +1,3 @@
-.red { -fx-background-color: red; }
-
-.common-div {
-    -fx-background-color: #2e3436;
-}
-
-
 
 #currentFiles .list-cell {
     -fx-text-fill: #585858;

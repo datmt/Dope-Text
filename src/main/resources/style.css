@@ -1,0 +1,24 @@
+.red { -fx-background-color: red; }
+
+.common-div {
+    -fx-background-color: #2e3436;
+}
+
+
+
+#currentFiles .list-cell {
+    -fx-text-fill: #585858;
+}
+
+
+.code-area .text {
+    -fx-fill: #2d2d2d;
+}
+
+.code-area .hlt {
+    -fx-background-color: #ffb51a ;
+    -rtfx-background-color: #ffb51a;
+    -fx-fill: red;
+    -rtfx-fill: red;
+    -fx-text-fill: blue;
+}

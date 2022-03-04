@@ -1,9 +1,7 @@
 package com.datmt.dope_text.db;
 
 import com.datmt.dope_text.db.model.File;
-import jdk.jshell.spi.SPIResolutionException;
 
-import javax.swing.plaf.nimbus.State;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;

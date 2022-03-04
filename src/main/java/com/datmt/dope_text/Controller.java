@@ -3,6 +3,7 @@ package com.datmt.dope_text;
 import com.datmt.dope_text.db.DB;
 import com.datmt.dope_text.db.model.File;
 import com.datmt.dope_text.fx.FileListCell;
+import com.datmt.dope_text.helper.TextSearcher;
 import com.datmt.dope_text.manager.CurrentFileManager;
 import com.datmt.dope_text.manager.StaticResource;
 import javafx.beans.value.ChangeListener;
@@ -25,6 +26,7 @@ import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
 
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -46,13 +48,16 @@ public class Controller {
     List<File> allCurrentlyOpenFiles;
 
     @FXML
+    TextField searchTF;
+
+    @FXML
     public void initialize() throws SQLException {
         CodeArea codeArea = new CodeArea();
         codeArea.setParagraphGraphicFactory(LineNumberFactory.get(codeArea));
         codeArea.setContextMenu(new DefaultContextMenu());
         codeArea.setId("codeArea");
-        VBox.setVgrow(codeArea, Priority.ALWAYS);
-        Label tutorial = new Label("Ctrl+S: Save, Ctrl+N: new, Ctrl+W: Close");
+
+        Label tutorial = new Label("Ctrl+S: Save, Ctrl+N: new, Ctrl+W: Close, Ctrl+F: Find, Ctrl+E: Export");
 
         startTab.getChildren().addAll(codeArea, tutorial);
 
@@ -69,6 +74,9 @@ public class Controller {
             return flc;
         });
 
+        codeArea.setAutoHeight(true);
+        VBox.setVgrow(codeArea, Priority.ALWAYS);
+
         StaticResource.codeArea = codeArea;
 
         currentFilesListViewEventHandler();
@@ -81,12 +89,7 @@ public class Controller {
     }
 
     private void registerFilterEvent() {
-        fileFilterTF.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                currentFiles.setItems(FXCollections.observableList(allCurrentlyOpenFiles.stream().filter(t -> t.getFileName().toUpperCase(Locale.ROOT).contains(newValue.toUpperCase(Locale.ROOT))).collect(Collectors.toList())));
-            }
-        });
+        fileFilterTF.textProperty().addListener((observable, oldValue, newValue) -> currentFiles.setItems(FXCollections.observableList(allCurrentlyOpenFiles.stream().filter(t -> t.getFileName().toUpperCase(Locale.ROOT).contains(newValue.toUpperCase(Locale.ROOT))).collect(Collectors.toList()))));
     }
 
 
@@ -169,4 +172,9 @@ public class Controller {
         svc.start();
     }
 
+
+    public void searchText() {
+        if (searchTF.getText() != null && !searchTF.getText().equals(""))
+            TextSearcher.highlightMatchText(StaticResource.codeArea.getText(), searchTF.getText());
+    }
 }

@@ -1,6 +1,7 @@
 package com.datmt.dope_text.db;
 
-import com.datmt.dope_text.db.model.File;
+import com.datmt.dope_text.db.model.UserFile;
+import com.datmt.dope_text.db.model.UserFileTable;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -35,8 +36,8 @@ public class DB {
     }
 
 
-    public List<File> getAllFiles() throws SQLException {
-        List<File> files = new ArrayList<>();
+    public List<UserFile> getAllFiles() throws SQLException {
+        List<UserFile> files = new ArrayList<>();
 
         Connection connection = getConnection();
 
@@ -46,7 +47,7 @@ public class DB {
         ResultSet set = statement.executeQuery(query);
 
         while (set.next()) {
-            files.add(new File(
+            files.add(new UserFile(
                     set.getLong("id"),
                     set.getString("file_hash"),
                     set.getString("local_path"),
@@ -63,8 +64,8 @@ public class DB {
         return files;
     }
 
-    public List<File> getAllOpenedFiles() throws SQLException {
-        List<File> files = new ArrayList<>();
+    public List<UserFile> getAllOpenedFiles() throws SQLException {
+        List<UserFile> files = new ArrayList<>();
 
         Connection connection = getConnection();
 
@@ -74,7 +75,7 @@ public class DB {
         ResultSet set = statement.executeQuery(query);
 
         while (set.next()) {
-            files.add(new File(
+            files.add(new UserFile(
                     set.getLong("id"),
                     set.getString("file_hash"),
                     set.getString("local_path"),
@@ -118,7 +119,7 @@ public class DB {
         closeConnection(connection);
     }
 
-    public File createFile(String content, String fileName) throws SQLException {
+    public UserFile createFile(String content, String fileName) throws SQLException {
         String sql = "INSERT INTO " + FILE_TABLE + " (file_hash, file_name, content, created_time, updated_time) VALUES (?, ?, ?, ?, ?)";
         Connection connection = getConnection();
 
@@ -136,7 +137,7 @@ public class DB {
             throw new SQLException("Failed to save file");
         }
 
-        File f = null;
+        UserFile f = null;
 
         try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
             if (generatedKeys.next()) {
@@ -159,7 +160,7 @@ public class DB {
     }
 
 
-    public void updateFile(File file) throws SQLException {
+    public void updateFile(UserFile file) throws SQLException {
         String sql = "UPDATE " + FILE_TABLE + " SET file_hash = ?, file_name = ?, content = ?, updated_time = ? WHERE id = ?";
         Connection connection = getConnection();
 
@@ -175,35 +176,33 @@ public class DB {
         closeConnection(connection);
     }
 
-    public void updateFile(Long fileId, String fileContent) throws SQLException {
-        String sql = "UPDATE " + FILE_TABLE + " SET content = ?, updated_time = ? WHERE id = ?";
-        Connection connection = getConnection();
-
-        long createdTime = Instant.now().getEpochSecond();
-        PreparedStatement statement = connection.prepareStatement(sql);
-
-        statement.setString(1, fileContent);
-        statement.setLong(2, createdTime);
-        statement.setLong(3, fileId);
-
-        statement.execute();
-        closeConnection(connection);
+    public void updateFileContent(Long fileId, String fileContent) throws SQLException {
+        updateSingleFileAttribute(fileId, UserFileTable.FILE_CONTENT, fileContent);
     }
 
     public void updateFileName(Long fileId, String fileName) throws SQLException {
-        String sql = "UPDATE " + FILE_TABLE + " SET file_name = ?, updated_time = ? WHERE id = ?";
+        updateSingleFileAttribute(fileId, UserFileTable.FILE_NAME, fileName);
+    }
+
+    public void updateFilePath(Long fileId, String filePath) throws SQLException {
+        updateSingleFileAttribute(fileId, UserFileTable.FILE_LOCAL_PATH, filePath);
+    }
+
+    public void updateSingleFileAttribute(Long fileId, String attribute, String value) throws SQLException {
+        String sql = "UPDATE " + FILE_TABLE + " SET "+attribute+" = ?, updated_time = ? WHERE id = ?";
         Connection connection = getConnection();
 
         long createdTime = Instant.now().getEpochSecond();
         PreparedStatement statement = connection.prepareStatement(sql);
 
-        statement.setString(1, fileName);
+        statement.setString(1, value);
         statement.setLong(2, createdTime);
         statement.setLong(3, fileId);
 
         statement.execute();
         closeConnection(connection);
     }
+
 
     public void updateFileOpenStatus(Long fileId, int openStatus) throws SQLException {
         String sql = "UPDATE " + FILE_TABLE + " SET is_open = ?, updated_time = ? WHERE id = ?";
@@ -292,7 +291,7 @@ public class DB {
 
     }
 
-    public File getFileById(Long id) throws SQLException {
+    public UserFile getFileById(Long id) throws SQLException {
         String query = "SELECT * FROM " + FILE_TABLE + " WHERE id = ?";
         Connection connection = getConnection();
 
@@ -301,11 +300,11 @@ public class DB {
 
         ResultSet set = statement.executeQuery();
 
-        File f = null;
+        UserFile f = null;
 
         if (set.next()) {
 
-            f = new File(
+            f = new UserFile(
                     set.getLong("id"),
                     set.getString("file_hash"),
                     set.getString("local_path"),
@@ -323,7 +322,7 @@ public class DB {
         return f;
     }
 
-    public File getLastOpenedFile() throws SQLException {
+    public UserFile getLastOpenedFile() throws SQLException {
         String fileId = getValueFromKey(CommonKeys.LAST_OPENED_FILE);
 
         if (fileId == null) {

@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class File {
+public class UserFile {
 
     Long id;
     String fileHash;

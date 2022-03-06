@@ -2,14 +2,14 @@ package com.datmt.dope_text.fx;
 
 
 import com.datmt.dope_text.db.DB;
-import com.datmt.dope_text.db.model.File;
+import com.datmt.dope_text.db.model.UserFile;
 import com.datmt.dope_text.manager.StaticResource;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.util.StringConverter;
 
 import java.sql.SQLException;
 
-public class FileListCell extends TextFieldListCell<File> {
+public class FileListCell extends TextFieldListCell<UserFile> {
 
     public FileListCell() {
         super();
@@ -17,18 +17,18 @@ public class FileListCell extends TextFieldListCell<File> {
     }
 
     private void updateFileName() {
-        StringConverter<File> converter = new StringConverter<>() {
+        StringConverter<UserFile> converter = new StringConverter<>() {
             @Override
-            public String toString(File file) {
+            public String toString(UserFile file) {
                 return file.getFileName();
             }
 
             @Override
-            public File fromString(String string) {
+            public UserFile fromString(String string) {
                 if (isEmpty()) {
                     return null;
                 }
-                File file = getItem();
+                UserFile file = getItem();
                 file.setFileName(string);
                 try {
                     StaticResource.stage.setTitle(file.getFileName() + " | Dope Text");
@@ -46,7 +46,7 @@ public class FileListCell extends TextFieldListCell<File> {
     }
 
     @Override
-    public void updateItem(File item, boolean empty) {
+    public void updateItem(UserFile item, boolean empty) {
         super.updateItem(item, empty);
         updateFileName();
     }

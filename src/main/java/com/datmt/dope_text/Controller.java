@@ -1,7 +1,7 @@
 package com.datmt.dope_text;
 
 import com.datmt.dope_text.db.DB;
-import com.datmt.dope_text.db.model.File;
+import com.datmt.dope_text.db.model.UserFile;
 import com.datmt.dope_text.fx.FileListCell;
 import com.datmt.dope_text.helper.TextSearcher;
 import com.datmt.dope_text.manager.CurrentFileManager;
@@ -13,7 +13,6 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
@@ -41,9 +40,9 @@ public class Controller {
     TextField fileFilterTF;
 
     @FXML
-    ListView<File> currentFiles;
+    ListView<UserFile> currentFiles;
 
-    List<File> allCurrentlyOpenFiles;
+    List<UserFile> allCurrentlyOpenFiles;
 
     @FXML
     TextField searchTF;
@@ -96,14 +95,14 @@ public class Controller {
 
     private void loadLastOpenedFile() throws SQLException {
         DB db = new DB();
-        File f = null;
+        UserFile f = null;
         f = db.getLastOpenedFile();
         if (f == null) {
             f = allCurrentlyOpenFiles.size() > 0 ? allCurrentlyOpenFiles.get(0) : null;
         }
 
         if (f != null) {
-            File finalF = f;
+            UserFile finalF = f;
             currentFiles.getSelectionModel().select(allCurrentlyOpenFiles.stream().filter(t -> t.getId().equals(finalF.getId())).findFirst().orElse(null));
             CurrentFileManager.updateCurrentlyOpenedFile(f);
         }
@@ -116,7 +115,7 @@ public class Controller {
         currentFiles.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                File f = currentFiles.getSelectionModel().getSelectedItem();
+                UserFile f = currentFiles.getSelectionModel().getSelectedItem();
                 if (f == null) {
                     return;
                 }
@@ -155,9 +154,8 @@ public class Controller {
                         if (!StaticResource.codeArea.getText().equals(StaticResource.currentFile.getContent())) {
 
                             try {
-                                DB db = new DB();
-                                StaticResource.currentFile.setContent(StaticResource.codeArea.getText());
-                                db.updateFile(StaticResource.currentFile.getId(), StaticResource.codeArea.getText());
+                                CurrentFileManager.saveCurrentFileToDB(StaticResource.codeArea.getText());
+                                CurrentFileManager.saveCurrentFileToDisk();
                             } catch (SQLException ex) {
                                 ex.printStackTrace();
                             }

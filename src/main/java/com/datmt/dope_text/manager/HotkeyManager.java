@@ -1,7 +1,8 @@
 package com.datmt.dope_text.manager;
 
 import com.datmt.dope_text.db.DB;
-import com.datmt.dope_text.db.model.File;
+import com.datmt.dope_text.db.model.UserFile;
+import com.datmt.dope_text.helper.Log1;
 import com.datmt.dope_text.helper.TextSearcher;
 import javafx.scene.Scene;
 import javafx.scene.control.ListView;
@@ -10,8 +11,13 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
-import org.fxmisc.richtext.CodeArea;
+import javafx.stage.FileChooser;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.UUID;
 
@@ -34,7 +40,43 @@ public class HotkeyManager {
             closeCurrentFile(ke, scene);
         } else if (find.match(ke)) {
             findInCurrentFile(ke, scene);
+        } else if (export.match(ke)) {
+            export(ke, scene);
         }
+    }
+
+    private static void export(KeyEvent ke, Scene scene) {
+        ke.consume();
+        if (StaticResource.currentFile != null && StaticResource.currentFile.getLocalPath() != null && Files.exists(Path.of(StaticResource.currentFile.getLocalPath()))) {
+            Log1.logger.info("Already exported to file");
+            return;
+        }
+
+        FileChooser fileChooser = new FileChooser();
+
+        //Show save file dialog
+        File file = fileChooser.showSaveDialog(scene.getWindow());
+
+        if (file != null) {
+            try {
+                PrintWriter writer;
+                writer = new PrintWriter(file);
+                writer.println(StaticResource.codeArea.getText());
+                writer.close();
+
+                //update file path to db and the currently select file
+                UserFile currentFile = CurrentFileManager.getFileFromListViewById(StaticResource.currentFile.getId());
+                if (currentFile == null) {
+                    Log1.logger.error("Current file in list view is null");
+                    return;
+                }
+                currentFile.setLocalPath(file.getAbsolutePath());
+                CurrentFileManager.updateFilePath(currentFile.getId(), file.getAbsolutePath());
+            } catch (IOException | SQLException ex) {
+                Log1.logger.error(ex);
+            }
+        }
+
     }
 
     private static void findInCurrentFile(KeyEvent ke, Scene scene) {
@@ -55,7 +97,7 @@ public class HotkeyManager {
     }
 
     private static void closeCurrentFile(KeyEvent ke, Scene scene) {
-        ListView<File> currentFiles = (ListView) scene.lookup("#currentFiles");
+        ListView<UserFile> currentFiles = (ListView) scene.lookup("#currentFiles");
         currentFiles.getItems().remove(currentFiles.getSelectionModel().getSelectedItem());
         try {
             DB db = new DB();
@@ -81,7 +123,7 @@ public class HotkeyManager {
                 CurrentFileManager.saveFileBeforeSelectionChange(StaticResource.currentFile);
             DB db = new DB();
 
-            File f = db.createFile("", "new dope-text-" + UUID.randomUUID().toString().replace("-", "").substring(0, 5));
+            UserFile f = db.createFile("", "new dope-text-" + UUID.randomUUID().toString().replace("-", "").substring(0, 5));
 
             currentFiles.getItems().add(f);
             currentFiles.getSelectionModel().select(f);
@@ -95,15 +137,14 @@ public class HotkeyManager {
     }
 
     private static void save(KeyEvent ke, Scene scene) {
-        CodeArea codeArea = (CodeArea) scene.lookup("#codeArea");
 
         if (StaticResource.currentFile != null) {
-            StaticResource.currentFile.setContent(codeArea.getText());
+            StaticResource.currentFile.setContent(StaticResource.codeArea.getText());
             try {
-                DB db = new DB();
-                db.updateFile(StaticResource.currentFile.getId(), codeArea.getText());
+                CurrentFileManager.saveCurrentFileToDB(StaticResource.codeArea.getText());
+                CurrentFileManager.saveCurrentFileToDisk();
             } catch (SQLException ex) {
-                ex.printStackTrace();
+                Log1.logger.error(ex);
             }
 
         }

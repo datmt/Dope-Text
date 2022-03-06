@@ -1,6 +1,6 @@
 package com.datmt.dope_text.manager;
 
-import com.datmt.dope_text.db.model.File;
+import com.datmt.dope_text.db.model.UserFile;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import lombok.Getter;
@@ -11,7 +11,7 @@ import org.fxmisc.richtext.CodeArea;
 @Getter
 public class StaticResource {
     public static CodeArea codeArea;
-    public static File currentFile;
+    public static UserFile currentFile;
     public static Scene scene;
     public static Stage stage;
 }

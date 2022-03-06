@@ -9,7 +9,7 @@ public class TextSearcher {
 
 
     public static void highlightMatchText(String text, String searchWord) {
-        StaticResource.codeArea.clearStyle(0, text.length() - 1);
+        clearHighlight();
         List<Integer> startIndex = findWord(text, searchWord);
 
         if (startIndex.size() == 0) {
@@ -37,5 +37,10 @@ public class TextSearcher {
             }
         }
         return indexes;
+    }
+
+    public static void clearHighlight() {
+        if (StaticResource.codeArea.getText().length() > 0)
+            StaticResource.codeArea.clearStyle(0, StaticResource.codeArea.getText().length());
     }
 }

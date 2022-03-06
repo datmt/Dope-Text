@@ -11,6 +11,7 @@ import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -46,6 +47,9 @@ public class Controller {
 
     @FXML
     TextField searchTF;
+
+    @FXML
+    CheckBox wrapTexCheckbox;
 
     @FXML
     public void initialize() throws SQLException {
@@ -173,5 +177,11 @@ public class Controller {
     public void searchText() {
         if (searchTF.getText() != null && !searchTF.getText().equals(""))
             TextSearcher.highlightMatchText(StaticResource.codeArea.getText(), searchTF.getText());
+        else
+            TextSearcher.clearHighlight();
+    }
+
+    public void toggleWrap() {
+        StaticResource.codeArea.setWrapText(wrapTexCheckbox.isSelected());
     }
 }

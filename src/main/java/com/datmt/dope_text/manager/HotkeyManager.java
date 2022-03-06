@@ -97,21 +97,7 @@ public class HotkeyManager {
     }
 
     private static void closeCurrentFile(KeyEvent ke, Scene scene) {
-        ListView<UserFile> currentFiles = (ListView) scene.lookup("#currentFiles");
-        currentFiles.getItems().remove(currentFiles.getSelectionModel().getSelectedItem());
-        try {
-            DB db = new DB();
-            db.updateFileOpenStatus(StaticResource.currentFile.getId(), 0);
-
-            if (currentFiles.getItems().size() > 0)
-                CurrentFileManager.updateCurrentlyOpenedFile(currentFiles.getItems().get(0));
-            else
-                StaticResource.codeArea.replaceText("");
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-
-
+        CurrentFileManager.closeCurrentFile();
         ke.consume(); // <-- stops passing the event to next node
     }
 
@@ -127,6 +113,7 @@ public class HotkeyManager {
 
             currentFiles.getItems().add(f);
             currentFiles.getSelectionModel().select(f);
+            StaticResource.allCurrentlyOpenFiles.add(f);
             CurrentFileManager.updateCurrentlyOpenedFile(f);
         } catch (SQLException ex) {
             ex.printStackTrace();

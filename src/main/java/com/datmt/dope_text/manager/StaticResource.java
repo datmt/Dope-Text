@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.fxmisc.richtext.CodeArea;
 
+import java.util.List;
+
 @Setter
 @Getter
 public class StaticResource {
@@ -14,4 +16,5 @@ public class StaticResource {
     public static UserFile currentFile;
     public static Scene scene;
     public static Stage stage;
+    public static List<UserFile> allCurrentlyOpenFiles;
 }

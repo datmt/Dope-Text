@@ -80,4 +80,27 @@ public class CurrentFileManager {
         ListView<UserFile> currentFiles = (ListView<UserFile>) StaticResource.scene.lookup("#currentFiles");
         return currentFiles.getItems().stream().filter(t -> t.getId().equals(id)).findFirst().orElse(null);
     }
+
+    public static void closeCurrentFile() {
+        ListView<UserFile> currentFilesLV = (ListView) StaticResource.scene.lookup("#currentFiles");
+        currentFilesLV.getItems().remove(currentFilesLV.getSelectionModel().getSelectedItem());
+
+        UserFile userFileInStaticList = StaticResource.allCurrentlyOpenFiles.stream().filter(t -> t.getId().equals(StaticResource.currentFile.getId())).findFirst().orElse(null);
+
+        if (userFileInStaticList!= null) {
+            StaticResource.allCurrentlyOpenFiles.remove(userFileInStaticList);
+        }
+
+        try {
+            DB db = new DB();
+            db.updateFileOpenStatus(StaticResource.currentFile.getId(), 0);
+
+            if (currentFilesLV.getItems().size() > 0)
+                CurrentFileManager.updateCurrentlyOpenedFile(currentFilesLV.getItems().get(0));
+            else
+                StaticResource.codeArea.replaceText("");
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
 }

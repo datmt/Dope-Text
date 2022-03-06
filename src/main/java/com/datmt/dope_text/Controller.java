@@ -78,6 +78,7 @@ public class Controller {
         VBox.setVgrow(codeArea, Priority.ALWAYS);
 
         StaticResource.codeArea = codeArea;
+        StaticResource.allCurrentlyOpenFiles = allCurrentlyOpenFiles;
 
         currentFilesListViewEventHandler();
 

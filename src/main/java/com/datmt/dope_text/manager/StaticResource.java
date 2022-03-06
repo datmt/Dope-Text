@@ -17,4 +17,5 @@ public class StaticResource {
     public static Scene scene;
     public static Stage stage;
     public static List<UserFile> allCurrentlyOpenFiles;
+    public static int currentFontSize = 13;
 }

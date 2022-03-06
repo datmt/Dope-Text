@@ -30,6 +30,8 @@ public class HotkeyManager {
         final KeyCombination export = new KeyCodeCombination(KeyCode.E, KeyCombination.CONTROL_DOWN);
         final KeyCombination exportAs = new KeyCodeCombination(KeyCode.E, KeyCombination.CONTROL_DOWN, KeyCombination.SHIFT_DOWN);
         final KeyCombination open = new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN);
+        final KeyCombination increaseSize = new KeyCodeCombination(KeyCode.EQUALS, KeyCombination.CONTROL_DOWN);
+        final KeyCombination decreaseSize = new KeyCodeCombination(KeyCode.MINUS, KeyCombination.CONTROL_DOWN);
 
 
         if (save.match(ke)) {
@@ -42,6 +44,10 @@ public class HotkeyManager {
             findInCurrentFile(ke, scene);
         } else if (export.match(ke)) {
             export(ke, scene);
+        } else if (increaseSize.match(ke)) {
+            increaseSize();
+        } else if (decreaseSize.match(ke)) {
+            decreaseSize();
         }
     }
 
@@ -137,5 +143,16 @@ public class HotkeyManager {
         }
 
         ke.consume(); // <-- stops passing the event to next node
+    }
+
+    private static void increaseSize() {
+
+        StaticResource.currentFontSize++;
+        StaticResource.codeArea.setStyle("-fx-font-size: " + StaticResource.currentFontSize + "px;");
+    }
+
+    private static void decreaseSize() {
+        StaticResource.currentFontSize--;
+        StaticResource.codeArea.setStyle("-fx-font-size: " + StaticResource.currentFontSize + "px;");
     }
 }

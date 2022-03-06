@@ -37,4 +37,12 @@ public class CurrentFileManager {
         file.setContent(StaticResource.codeArea.getText());
         db.updateFile(file.getId(), StaticResource.codeArea.getText());
     }
+
+    public static void exportToLocalFile() {
+
+    }
+
+    public static void openLocalFile() {
+
+    }
 }

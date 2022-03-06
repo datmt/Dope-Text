@@ -58,9 +58,9 @@ public class Controller {
         codeArea.setContextMenu(new DefaultContextMenu());
         codeArea.setId("codeArea");
 
-        Label tutorial = new Label("Ctrl+S: Save, Ctrl+N: new, Ctrl+W: Close, Ctrl+F: Find, Ctrl+E: Export");
+//        Label tutorial = new Label("Ctrl+S: Save, Ctrl+N: new, Ctrl+W: Close, Ctrl+F: Find, Ctrl+E: Export");
 
-        startTab.getChildren().addAll(codeArea, tutorial);
+        startTab.getChildren().addAll(codeArea);
 
         DB db = new DB();
 

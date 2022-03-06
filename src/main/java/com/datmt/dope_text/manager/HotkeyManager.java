@@ -152,7 +152,8 @@ public class HotkeyManager {
     }
 
     private static void decreaseSize() {
-        StaticResource.currentFontSize--;
+        if (StaticResource.currentFontSize > 1)
+            StaticResource.currentFontSize--;
         StaticResource.codeArea.setStyle("-fx-font-size: " + StaticResource.currentFontSize + "px;");
     }
 }

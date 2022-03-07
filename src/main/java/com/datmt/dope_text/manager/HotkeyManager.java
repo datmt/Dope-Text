@@ -45,9 +45,15 @@ public class HotkeyManager {
         } else if (export.match(ke)) {
             export(ke, scene);
         } else if (increaseSize.match(ke)) {
-            increaseSize();
+            increaseSize(ke);
         } else if (decreaseSize.match(ke)) {
-            decreaseSize();
+            decreaseSize(ke);
+        } else if (open.match(ke)) {
+            try {
+                open(scene, ke);
+            } catch (SQLException | IOException e) {
+                Log1.logger.error(e);
+            }
         }
     }
 
@@ -119,7 +125,6 @@ public class HotkeyManager {
 
             currentFiles.getItems().add(f);
             currentFiles.getSelectionModel().select(f);
-            StaticResource.allCurrentlyOpenFiles.add(f);
             CurrentFileManager.updateCurrentlyOpenedFile(f);
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -145,15 +150,48 @@ public class HotkeyManager {
         ke.consume(); // <-- stops passing the event to next node
     }
 
-    private static void increaseSize() {
+    private static void increaseSize(KeyEvent ke) {
 
         StaticResource.currentFontSize++;
         StaticResource.codeArea.setStyle("-fx-font-size: " + StaticResource.currentFontSize + "px;");
+        ke.consume();
     }
 
-    private static void decreaseSize() {
+    private static void decreaseSize(KeyEvent ke) {
         if (StaticResource.currentFontSize > 1)
             StaticResource.currentFontSize--;
         StaticResource.codeArea.setStyle("-fx-font-size: " + StaticResource.currentFontSize + "px;");
+        ke.consume();
+
+    }
+
+    private static void open(Scene scene, KeyEvent ke) throws SQLException, IOException {
+        FileChooser chooser = new FileChooser();
+
+        File f = chooser.showOpenDialog(scene.getWindow());
+
+        if (f != null) {
+            DB db = new DB();
+            UserFile existingFile = db.findFindByLocalPath(f.getAbsolutePath());
+            ListView currentFiles = (ListView) scene.lookup("#currentFiles");
+            if (existingFile == null) {
+                UserFile newFile = db.createFile(Files.readString(f.toPath()), f.getName());
+                db.updateLocalFilePath(newFile.getId(), f.getAbsolutePath());
+                newFile.setLocalPath(f.getAbsolutePath());
+
+                currentFiles.getItems().add(newFile);
+                currentFiles.getSelectionModel().select(newFile);
+
+                CurrentFileManager.updateCurrentlyOpenedFile(newFile);
+                CurrentFileManager.selectCurrentFileById(newFile.getId());
+            } else {
+                CurrentFileManager.updateCurrentlyOpenedFile(existingFile);
+                StaticResource.codeArea.replaceText(Files.readString(f.toPath()));
+                CurrentFileManager.selectCurrentFileById(existingFile.getId());
+            }
+        }
+
+
+        ke.consume();
     }
 }

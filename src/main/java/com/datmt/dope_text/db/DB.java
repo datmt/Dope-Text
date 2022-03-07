@@ -2,6 +2,7 @@ package com.datmt.dope_text.db;
 
 import com.datmt.dope_text.db.model.UserFile;
 import com.datmt.dope_text.db.model.UserFileTable;
+import com.datmt.dope_text.helper.Log1;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -142,8 +143,7 @@ public class DB {
         try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
             if (generatedKeys.next()) {
                 f = getFileById(generatedKeys.getLong(1));
-            }
-            else {
+            } else {
                 throw new SQLException("Failed to save file");
             }
         }
@@ -176,6 +176,35 @@ public class DB {
         closeConnection(connection);
     }
 
+    public UserFile findFindByLocalPath(String localPath) throws SQLException {
+        String query = "SELECT * FROM " + FILE_TABLE + " WHERE " + UserFileTable.FILE_LOCAL_PATH + "=?";
+
+        Connection connection = getConnection();
+
+        PreparedStatement statement = connection.prepareStatement(query);
+
+        statement.setString(1, localPath);
+        ResultSet set = statement.executeQuery();
+        UserFile f = null;
+        if (set.next()) {
+            f = new UserFile(
+                    set.getLong("id"),
+                    set.getString("file_hash"),
+                    set.getString("local_path"),
+                    set.getString("file_name"),
+                    set.getString("content"),
+                    set.getLong("created_time"),
+                    set.getLong("updated_time"),
+                    set.getInt("is_open")
+
+            );
+        }
+
+        closeConnection(connection);
+
+        return f;
+    }
+
     public void updateFileContent(Long fileId, String fileContent) throws SQLException {
         updateSingleFileAttribute(fileId, UserFileTable.FILE_CONTENT, fileContent);
     }
@@ -184,12 +213,13 @@ public class DB {
         updateSingleFileAttribute(fileId, UserFileTable.FILE_NAME, fileName);
     }
 
-    public void updateFilePath(Long fileId, String filePath) throws SQLException {
+    public void updateLocalFilePath(Long fileId, String filePath) throws SQLException {
         updateSingleFileAttribute(fileId, UserFileTable.FILE_LOCAL_PATH, filePath);
     }
 
     public void updateSingleFileAttribute(Long fileId, String attribute, String value) throws SQLException {
-        String sql = "UPDATE " + FILE_TABLE + " SET "+attribute+" = ?, updated_time = ? WHERE id = ?";
+        Log1.logger.info("Update attribute {} of file {} with value {}", attribute, fileId, value);
+        String sql = "UPDATE " + FILE_TABLE + " SET " + attribute + " = ?, updated_time = ? WHERE id = ?";
         Connection connection = getConnection();
 
         long createdTime = Instant.now().getEpochSecond();
@@ -199,7 +229,7 @@ public class DB {
         statement.setLong(2, createdTime);
         statement.setLong(3, fileId);
 
-        statement.execute();
+        statement.executeUpdate();
         closeConnection(connection);
     }
 

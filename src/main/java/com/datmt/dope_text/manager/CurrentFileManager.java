@@ -63,7 +63,7 @@ public class CurrentFileManager {
 
     public static void updateFilePath(Long fileId, String filePath) throws SQLException {
         DB db = new DB();
-        db.updateFilePath(fileId, filePath);
+        db.updateLocalFilePath(fileId, filePath);
     }
 
 
@@ -101,6 +101,14 @@ public class CurrentFileManager {
                 StaticResource.codeArea.replaceText("");
         } catch (SQLException ex) {
             ex.printStackTrace();
+        }
+    }
+
+    public static void selectCurrentFileById(Long id) {
+        UserFile file = getFileFromListViewById(id);
+        if (file != null) {
+            ListView<UserFile> currentFiles = (ListView<UserFile>) StaticResource.scene.lookup("#currentFiles");
+            currentFiles.getSelectionModel().select(file);
         }
     }
 }

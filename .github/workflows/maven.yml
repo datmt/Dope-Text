@@ -24,3 +24,13 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn -B package --file pom.xml
+
+    - name: Maven Jar Publish
+      # You may pin to the exact commit or the version.
+      # uses: eric2788/maven-jar-publish@d65d29c6af1fac6ab7043dd668161556145963a9
+      uses: eric2788/maven-jar-publish@v1
+      with:
+        # the java version to build (if not provied, it will use the ${ maven.compiler.target } properties
+        draft: false
+        # whether the release is pre-release
+        pre-release: false

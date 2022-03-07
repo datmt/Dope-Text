@@ -2,6 +2,7 @@ package com.datmt.dope_text.manager;
 
 import com.datmt.dope_text.db.model.UserFile;
 import javafx.scene.Scene;
+import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,4 +19,8 @@ public class StaticResource {
     public static Stage stage;
     public static List<UserFile> allCurrentlyOpenFiles;
     public static int currentFontSize = 13;
+
+    public static ListView<UserFile> getCurrentFilesLV() {
+        return (ListView<UserFile>) scene.lookup("#currentFiles");
+    }
 }

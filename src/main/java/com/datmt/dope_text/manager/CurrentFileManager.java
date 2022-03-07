@@ -31,6 +31,7 @@ public class CurrentFileManager {
 
     }
 
+
     public static void saveFileBeforeSelectionChange(UserFile file) throws SQLException {
 
         if (file.getContent().equals(StaticResource.codeArea.getText()))

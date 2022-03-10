@@ -18,6 +18,10 @@ You are free to fork to create the ones that suit your need.
 
 PR/MR are welcome.
 
+# Screenshot
+![image](https://user-images.githubusercontent.com/14150061/157567117-cba6eaa0-d0b9-468f-936a-0c208ad1a228.png)
+
+
 # Quick tutorial
 
 ```shell

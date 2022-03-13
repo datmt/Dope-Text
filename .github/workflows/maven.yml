@@ -3,11 +3,10 @@
 
 name: Java CI with Maven
 
-on:
+on:  
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    tags:
+      - '*'
 env:
   GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 jobs:

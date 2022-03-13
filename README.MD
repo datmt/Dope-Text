@@ -5,7 +5,7 @@ Why another text editor? Isn't sublime text is enough?
 This text editor is created purely for one selfish reason: I need something that tailor to *my* workflow.
 
 I create a lot of text file during my day of work. Most of the content are not worth saving. However, some are
-valueable.
+valuable.
 
 I want the text editor to save them all, with snapshots. So I can go back anytime to find any text that I store in the
 past.

@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
@@ -11,7 +12,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.datmt.dope_text.Controller">
+<BorderPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.datmt.dope_text.Controller">
    <center>
       <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
         <tabs>
@@ -22,16 +23,25 @@
                         <VBox fx:id="startTab" VBox.vgrow="ALWAYS" />
                         <HBox>
                            <children>
-                              <CheckBox fx:id="wrapTexCheckbox" mnemonicParsing="false" onAction="#toggleWrap" text="Wrap" />
+                              <CheckBox fx:id="wrapTexCheckbox" mnemonicParsing="false" onAction="#toggleWrap" text="Wrap">
+                                 <HBox.margin>
+                                    <Insets bottom="5.0" />
+                                 </HBox.margin></CheckBox>
                            </children>
                         </HBox>
                         <HBox>
                            <children>
                               <TextField fx:id="searchTF" promptText="Search" HBox.hgrow="ALWAYS" />
-                              <Button mnemonicParsing="false" onAction="#searchText" text="Search" />
+                              <Button fx:id="searchButton" mnemonicParsing="false" onAction="#searchText" text="Search">
+                                 <HBox.margin>
+                                    <Insets left="5.0" />
+                                 </HBox.margin></Button>
                            </children>
                         </HBox>
                      </children>
+                     <padding>
+                        <Insets top="5.0" />
+                     </padding>
                   </VBox>
                </content>
           </Tab>
@@ -52,7 +62,10 @@
                      <content>
                         <VBox>
                            <children>
-                              <TextField fx:id="fileFilterTF" />
+                              <TextField fx:id="fileFilterTF">
+                                 <VBox.margin>
+                                    <Insets top="5.0" />
+                                 </VBox.margin></TextField>
                               <ListView fx:id="currentFiles" VBox.vgrow="ALWAYS" />
                            </children>
                         </VBox>
@@ -65,13 +78,21 @@
                 </Tab>
                   <Tab text="Settings">
                      <content>
-                        <VBox prefHeight="200.0" prefWidth="100.0" />
+                        <VBox prefHeight="200.0" prefWidth="100.0">
+                           <children>
+                              <Label text="Current data location" />
+                              <Label fx:id="dbLocationLB" />
+                              <Button mnemonicParsing="false" onAction="#changeDbLocation" text="Change" />
+                           </children></VBox>
                      </content>
                   </Tab>
               </tabs>
             </TabPane>
             <HBox />
          </children>
+         <BorderPane.margin>
+            <Insets right="10.0" />
+         </BorderPane.margin>
       </VBox>
    </left>
    <padding>

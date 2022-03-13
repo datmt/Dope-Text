@@ -4,6 +4,7 @@ import com.datmt.dope_text.db.DB;
 import com.datmt.dope_text.db.model.UserFile;
 import com.datmt.dope_text.fx.FileListCell;
 import com.datmt.dope_text.helper.TextSearcher;
+import com.datmt.dope_text.helper.UserPrefs;
 import com.datmt.dope_text.manager.CurrentFileManager;
 import com.datmt.dope_text.manager.StaticResource;
 import javafx.collections.FXCollections;
@@ -13,16 +14,19 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.util.Duration;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
 
+import java.io.File;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Locale;
@@ -49,6 +53,10 @@ public class Controller {
 
     @FXML
     CheckBox wrapTexCheckbox;
+
+
+    @FXML
+    Label dbLocationLB;
 
     @FXML
     public void initialize() throws SQLException {
@@ -87,6 +95,14 @@ public class Controller {
         autosaveJob();
         registerFilterEvent();
 
+        populateDBLocation();
+    }
+
+    private void populateDBLocation() {
+        dbLocationLB.setWrapText(true);
+        if (UserPrefs.getDbLocation() != null) {
+            dbLocationLB.setText(UserPrefs.getDbLocation());
+        }
     }
 
     private void registerFilterEvent() {
@@ -182,5 +198,15 @@ public class Controller {
 
     public void toggleWrap() {
         StaticResource.codeArea.setWrapText(wrapTexCheckbox.isSelected());
+    }
+
+    public void changeDbLocation() {
+        FileChooser chooser = new FileChooser();
+        File f = chooser.showOpenDialog(rootPane.getScene().getWindow());
+
+        if (f != null) {
+            UserPrefs.setDbLocation(f.getAbsolutePath());
+            dbLocationLB.setText(f.getAbsolutePath());
+        }
     }
 }

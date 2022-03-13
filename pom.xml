@@ -6,7 +6,7 @@
 
     <groupId>groupId</groupId>
     <artifactId>dope-text</artifactId>
-    <version>1.0-FINAL</version>
+    <version>1.0</version>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
@@ -26,12 +26,12 @@
             <version>11</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-graphics</artifactId>
-            <version>11</version>
-            <classifier>win</classifier>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.openjfx</groupId>-->
+<!--            <artifactId>javafx-graphics</artifactId>-->
+<!--            <version>11</version>-->
+<!--            <classifier>win</classifier>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>org.openjfx</groupId>

@@ -3,7 +3,9 @@ package com.datmt.dope_text.db;
 import com.datmt.dope_text.db.model.UserFile;
 import com.datmt.dope_text.db.model.UserFileTable;
 import com.datmt.dope_text.helper.Log1;
+import com.datmt.dope_text.helper.UserPrefs;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -16,7 +18,6 @@ import java.util.List;
 import java.util.UUID;
 
 public class DB {
-    private static final String DB_CONNECTION = "jdbc:sqlite:dope_text.db";
     private static final String FILE_TABLE = "Files";
     private static final String KEY_VALUE_TABLE = "KeysValues";
 
@@ -28,8 +29,18 @@ public class DB {
 
     private void initConnection() throws SQLException {
         if (connection == null || connection.isClosed()) {
-            connection = DriverManager.getConnection(DB_CONNECTION);
+
+            connection = DriverManager.getConnection(getDBConnectionString());
         }
+    }
+
+    private String getDBConnectionString() {
+        if (UserPrefs.getDbLocation() == null || UserPrefs.getDbLocation().trim().equals("")) {
+            File f = new File("dope_text.db");
+            UserPrefs.setDbLocation(f.getAbsolutePath());
+            return "jdbc:sqlite:" + f.getAbsolutePath();
+        }
+        return "jdbc:sqlite:" + UserPrefs.getDbLocation();
     }
 
     public DB() throws SQLException {

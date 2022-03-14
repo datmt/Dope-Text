@@ -16,7 +16,7 @@
    <center>
       <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
         <tabs>
-          <Tab text="Current">
+          <Tab closable="false" text="Current">
                <content>
                   <VBox>
                      <children>
@@ -45,7 +45,7 @@
                   </VBox>
                </content>
           </Tab>
-            <Tab text="Snapshots">
+            <Tab closable="false" text="Snapshots">
                <content>
                   <VBox prefHeight="200.0" prefWidth="100.0" />
                </content>
@@ -58,7 +58,7 @@
          <children>
             <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
               <tabs>
-                <Tab text="Current">
+                <Tab closable="false" text="Current">
                      <content>
                         <VBox>
                            <children>
@@ -71,7 +71,7 @@
                         </VBox>
                      </content>
                 </Tab>
-                <Tab text="Closed files">
+                <Tab closable="false" text="Closed files">
                      <content>
                         <ListView fx:id="historyFiles" prefHeight="200.0" prefWidth="200.0" />
                      </content>
@@ -96,6 +96,6 @@
       </VBox>
    </left>
    <padding>
-      <Insets bottom="11.0" left="11.0" right="11.0" top="11.0" />
+      <Insets bottom="11.0" left="11.0" right="20.0" top="11.0" />
    </padding>
 </BorderPane>

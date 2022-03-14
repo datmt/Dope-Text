@@ -5,9 +5,13 @@ b6b8b9: code editor text color
 ffd733: input/tab border color
 24231b: button text color
  */
-* {
+.tab-pane, .pane, .v-box, .tab, .tab-header-area, .tab-header-background, #rootPane, .list-view, .list-cell,
+.check-box, .check-box .box,  .text-field, .text-area {
     -fx-background-color: #1c2025;
-    -fx-text-fill: #585858;
+}
+
+#rootPane .header-panel {
+    -fx-background-color: #1c2025;
 }
 
 #currentFiles .list-cell {
@@ -21,6 +25,10 @@ ffd733: input/tab border color
 .code-area .text {
     -fx-fill: #b6b8b9;
 
+}
+
+.code-area .caret {
+    -fx-stroke: #ffb51a;
 }
 
 .code-area .hlt {
@@ -42,30 +50,33 @@ ffd733: input/tab border color
 /*    -fx-border-color:  #ffd733;*/
 /*}*/
 
-.tab-header-area .tab:focused {
-    -fx-background-insets: 0, 0, 0, 0;
-}
-
-.tab-header-area .tab:selected  {
-    -fx-border-color:  #ffd733;
-    -fx-border-style: solid solid none solid;
-}
 .tab-header-area .tab {
     -fx-fill: #b6b8b9;
     -tab-text-color: #b6b8b9;
 
 }
 
+.tab .tab-label {
+    -fx-text-fill: #b6b8b9;
+}
+
+
+.tab-header-area .tab:selected {
+    -fx-border-color: #ffd733;
+    -fx-border-style: solid solid none solid;
+}
+
 .button {
     -fx-background-color: #ffd733;
     -fx-text-fill: #24231b;
-    -fx-border-radius: 0;
+    -fx-border-radius: 0px;
+    -fx-background-radius: 0px;
 }
 
 .check-box .box {
     -fx-border-color: #ffd733;
 }
 
-.check-box:selected .mark  {
+.check-box:selected .mark {
     -fx-background-color: #ffd733;
 }

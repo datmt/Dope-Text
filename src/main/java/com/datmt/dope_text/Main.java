@@ -6,6 +6,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
@@ -17,11 +18,20 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("ui.fxml")));
         primaryStage.setTitle("Dope Text");
+
         Scene scene = new Scene(root);
         scene.getStylesheets().add(Objects.requireNonNull(getClass().getClassLoader().getResource("style.css").toExternalForm()));
         registerHotKeys((scene));
+
         StaticResource.scene = scene;
+
+        primaryStage.getIcons().addAll(
+                new Image("logo128.png"),
+                new Image("logo64.png"),
+                new Image("logo32.png")
+        );
         primaryStage.setScene(scene);
+
         primaryStage.show();
         StaticResource.stage = primaryStage;
     }

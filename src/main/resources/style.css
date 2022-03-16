@@ -39,6 +39,10 @@ ffd733: input/tab border color
     -fx-text-fill: blue;
 }
 
+.code-area .lineno {
+    -fx-background-color: #2a3038;
+}
+
 .text-field, .text-area {
     -fx-border-color: #ffd733;
 }

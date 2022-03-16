@@ -64,7 +64,7 @@
                            <children>
                               <TextField fx:id="fileFilterTF">
                                  <VBox.margin>
-                                    <Insets top="5.0" />
+                                    <Insets bottom="5.0" top="5.0" />
                                  </VBox.margin></TextField>
                               <ListView fx:id="currentFiles" VBox.vgrow="ALWAYS" />
                            </children>

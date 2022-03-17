@@ -31,7 +31,7 @@ public class Main extends Application {
                 new Image("logo32.png")
         );
         primaryStage.setScene(scene);
-
+        primaryStage.setMaximized(true);
         primaryStage.show();
         StaticResource.stage = primaryStage;
     }

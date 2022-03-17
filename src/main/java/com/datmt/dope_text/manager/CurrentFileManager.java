@@ -55,7 +55,7 @@ public class CurrentFileManager {
     public static void saveCurrentFileToDisk() {
         UserFile file = StaticResource.currentFile;
         if (file == null || file.getLocalPath() == null) {
-            Log1.logger.error("File not saved: current file is null or local path is not set");
+            Log1.logger.warn("File not saved: current file is null or local path is not set");
             return;
         }
 

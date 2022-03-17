@@ -6,8 +6,9 @@ ffd733: input/tab border color
 24231b: button text color
  */
 .tab-pane, .pane, .v-box, .tab, .tab-header-area, .tab-header-background, #rootPane, .list-view, .list-cell,
-.check-box, .check-box .box,  .text-field, .text-area {
+.check-box, .check-box .box,  .text-field, .text-area, .label {
     -fx-background-color: #1c2025;
+    -fx-text-fill: #adadad;
 }
 
 #rootPane .header-panel {
@@ -15,21 +16,26 @@ ffd733: input/tab border color
 }
 
 #currentFiles .list-cell {
-    -fx-text-fill: #585858;
+    -fx-text-fill: #adadad;
 }
 
 .code-area {
     -fx-background-color: #0e0f14;
+    -fx-highlight-fill: paleturquoise;
+    -fx-accent: red ;
 }
 
 .code-area .text {
     -fx-fill: #b6b8b9;
-
+    -fx-accent: red ;
+    -fx-highlight-fill: green;
 }
 
 .code-area .caret {
     -fx-stroke: #ffb51a;
+    -fx-arc-width: 3;
 }
+
 
 .code-area .hlt {
     -fx-background-color: #ffb51a;
@@ -39,8 +45,20 @@ ffd733: input/tab border color
     -fx-text-fill: blue;
 }
 
-.code-area .lineno {
+
+.code-area .lineno, .code-area .lineno *{
     -fx-background-color: #2a3038;
+}
+.code-area .selection {
+    -fx-fill: #20222d;
+}
+
+.code-area .paragraph-box {
+    -fx-padding: 5px;
+}
+
+.code-area .paragraph-box:has-caret {
+    -fx-background-color: #23242d;
 }
 
 .text-field, .text-area {

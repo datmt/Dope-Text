@@ -27,15 +27,12 @@ ffd733: input/tab border color
 
 .code-area .text {
     -fx-fill: #b6b8b9;
-    -fx-accent: red ;
-    -fx-highlight-fill: green;
 }
 
 .code-area .caret {
     -fx-stroke: #ffb51a;
     -fx-arc-width: 3;
 }
-
 
 .code-area .hlt {
     -fx-background-color: #ffb51a;
@@ -50,7 +47,7 @@ ffd733: input/tab border color
     -fx-background-color: #2a3038;
 }
 .code-area .selection {
-    -fx-fill: #20222d;
+    -fx-fill: #645809;
 }
 
 .code-area .paragraph-box {

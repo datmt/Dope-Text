@@ -77,12 +77,14 @@ public class CurrentFileManager {
     }
 
     public static UserFile getFileFromListViewById(Long id) {
-        ListView<UserFile> currentFiles = (ListView<UserFile>) StaticResource.scene.lookup("#currentFiles");
+        ListView<UserFile> currentFiles = (ListView<UserFile>) StaticResource.scene.lookup("#currentFilesLV");
         return currentFiles.getItems().stream().filter(t -> t.getId().equals(id)).findFirst().orElse(null);
     }
 
     public static void closeCurrentFile() {
-        ListView<UserFile> currentFilesLV = (ListView) StaticResource.scene.lookup("#currentFiles");
+        ListView<UserFile> currentFilesLV = (ListView) StaticResource.scene.lookup("#currentFilesLV");
+        ListView<UserFile> closedFilesLV = (ListView) StaticResource.scene.lookup("#closedFilesLV");
+        closedFilesLV.getItems().add(currentFilesLV.getSelectionModel().getSelectedItem());
         currentFilesLV.getItems().remove(currentFilesLV.getSelectionModel().getSelectedItem());
 
         UserFile userFileInStaticList = StaticResource.allCurrentlyOpenFiles.stream().filter(t -> t.getId().equals(StaticResource.currentFile.getId())).findFirst().orElse(null);
@@ -99,6 +101,7 @@ public class CurrentFileManager {
                 CurrentFileManager.updateCurrentlyOpenedFile(currentFilesLV.getItems().get(0));
             else
                 StaticResource.codeArea.replaceText("");
+
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -107,7 +110,7 @@ public class CurrentFileManager {
     public static void selectCurrentFileById(Long id) {
         UserFile file = getFileFromListViewById(id);
         if (file != null) {
-            ListView<UserFile> currentFiles = (ListView<UserFile>) StaticResource.scene.lookup("#currentFiles");
+            ListView<UserFile> currentFiles = (ListView<UserFile>) StaticResource.scene.lookup("#currentFilesLV");
             currentFiles.getSelectionModel().select(file);
         }
     }

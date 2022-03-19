@@ -22,7 +22,7 @@ PR/MR are welcome.
 
 # Screenshot
 
-![image](https://user-images.githubusercontent.com/14150061/157567117-cba6eaa0-d0b9-468f-936a-0c208ad1a228.png)
+![image](https://user-images.githubusercontent.com/14150061/159109830-c2322c2a-cf31-471a-90c0-845443d93763.png)
 
 # Quick tutorial
 

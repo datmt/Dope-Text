@@ -15,11 +15,17 @@ ffd733: input/tab border color
     -fx-background-color: #1c2025;
 }
 
-#currentFiles .list-cell {
+#leftPane {
+    -fx-padding: 0 10px 0 0;
+    -fx-border-width: 0 1px 0 0;
+    -fx-border-color: #2c323a;
+}
+
+#currentFilesLV .list-cell {
     -fx-text-fill: #adadad;
 }
 
-#currentFiles .list-cell:selected {
+#currentFilesLV .list-cell:selected {
     -fx-text-fill: #ffb51a;
     -fx-background-color: #363e48;
 }

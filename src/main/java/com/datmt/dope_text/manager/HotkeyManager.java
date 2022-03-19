@@ -65,6 +65,8 @@ public class HotkeyManager {
         }
 
         FileChooser fileChooser = new FileChooser();
+        assert StaticResource.currentFile != null;
+        fileChooser.setInitialFileName(StaticResource.currentFile.getFileName());
 
         //Show save file dialog
         File file = fileChooser.showSaveDialog(scene.getWindow());

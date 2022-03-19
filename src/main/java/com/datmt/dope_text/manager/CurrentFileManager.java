@@ -28,7 +28,6 @@ public class CurrentFileManager {
             StaticResource.stage.setTitle(file.getFileName() + " | Dope Text");
         }
 
-
     }
 
 

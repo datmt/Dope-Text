@@ -3,6 +3,7 @@ package com.datmt.dope_text;
 import com.datmt.dope_text.db.DB;
 import com.datmt.dope_text.db.model.UserFile;
 import com.datmt.dope_text.fx.FileListCell;
+import com.datmt.dope_text.helper.Log1;
 import com.datmt.dope_text.helper.TextSearcher;
 import com.datmt.dope_text.helper.UserPrefs;
 import com.datmt.dope_text.manager.CurrentFileManager;
@@ -16,7 +17,9 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Priority;
@@ -44,9 +47,14 @@ public class Controller {
     TextField fileFilterTF;
 
     @FXML
-    ListView<UserFile> currentFiles;
+    ListView<UserFile> currentFilesLV;
+
+    @FXML
+    ListView<UserFile> closedFilesLV;
 
     List<UserFile> allCurrentlyOpenFiles;
+
+    List<UserFile> allClosedFiles;
 
     @FXML
     TextField searchTF;
@@ -54,7 +62,8 @@ public class Controller {
     @FXML
     CheckBox wrapTexCheckbox;
 
-
+    @FXML
+    TabPane leftSideTabPane;
     @FXML
     Label dbLocationLB;
 
@@ -72,11 +81,14 @@ public class Controller {
         DB db = new DB();
 
         allCurrentlyOpenFiles = db.getAllOpenedFiles();
-        currentFiles.setItems(FXCollections.observableList(allCurrentlyOpenFiles));
-        currentFiles.setEditable(true);
+        allClosedFiles = db.getAllClosedFiles();
+        currentFilesLV.setItems(FXCollections.observableList(allCurrentlyOpenFiles));
+        currentFilesLV.setEditable(true);
+
+        closedFilesLV.setItems(FXCollections.observableList(allClosedFiles));
 
 
-        currentFiles.setCellFactory(param -> {
+        currentFilesLV.setCellFactory(param -> {
             FileListCell flc = new FileListCell();
 
             return flc;
@@ -89,6 +101,7 @@ public class Controller {
         StaticResource.allCurrentlyOpenFiles = allCurrentlyOpenFiles;
 
         currentFilesListViewEventHandler();
+        closeFilesListViewEventHandler();
 
         loadLastOpenedFile();
 
@@ -106,7 +119,7 @@ public class Controller {
     }
 
     private void registerFilterEvent() {
-        fileFilterTF.textProperty().addListener((observable, oldValue, newValue) -> currentFiles.setItems(FXCollections.observableList(allCurrentlyOpenFiles.stream().filter(t -> t.getFileName().toUpperCase(Locale.ROOT).contains(newValue.toUpperCase(Locale.ROOT))).collect(Collectors.toList()))));
+        fileFilterTF.textProperty().addListener((observable, oldValue, newValue) -> currentFilesLV.setItems(FXCollections.observableList(allCurrentlyOpenFiles.stream().filter(t -> t.getFileName().toUpperCase(Locale.ROOT).contains(newValue.toUpperCase(Locale.ROOT))).collect(Collectors.toList()))));
     }
 
 
@@ -120,7 +133,7 @@ public class Controller {
 
         if (f != null) {
             UserFile finalF = f;
-            currentFiles.getSelectionModel().select(allCurrentlyOpenFiles.stream().filter(t -> t.getId().equals(finalF.getId())).findFirst().orElse(null));
+            currentFilesLV.getSelectionModel().select(allCurrentlyOpenFiles.stream().filter(t -> t.getId().equals(finalF.getId())).findFirst().orElse(null));
             CurrentFileManager.updateCurrentlyOpenedFile(f);
         }
 
@@ -129,29 +142,56 @@ public class Controller {
 
     private void currentFilesListViewEventHandler() {
 
-        currentFiles.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                UserFile f = currentFiles.getSelectionModel().getSelectedItem();
-                if (f == null) {
-                    return;
-                }
+        currentFilesLV.setOnMouseClicked(event -> {
+            UserFile f = currentFilesLV.getSelectionModel().getSelectedItem();
+            if (f == null) {
+                return;
+            }
 
-                if (f.equals(StaticResource.currentFile)) {
-                    return;
-                }
+            if (f.equals(StaticResource.currentFile)) {
+                return;
+            }
 
-                try {
-                    CurrentFileManager.saveFileBeforeSelectionChange(StaticResource.currentFile);
-                    CurrentFileManager.updateCurrentlyOpenedFile(f);
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
+            try {
+                CurrentFileManager.saveFileBeforeSelectionChange(StaticResource.currentFile);
+                CurrentFileManager.updateCurrentlyOpenedFile(f);
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         });
 
     }
 
+
+    private void closeFilesListViewEventHandler() {
+
+        closedFilesLV.setOnMouseClicked(event -> {
+
+            if (event.getClickCount() < 2) {
+                return;
+            }
+
+            UserFile f = closedFilesLV.getSelectionModel().getSelectedItem();
+            if (f == null) {
+                return;
+            }
+
+            try {
+                DB db = new DB();
+                db.updateFileOpenStatus(f.getId(), 1);
+                //add this file to the current file list
+                currentFilesLV.getItems().add(f);
+                closedFilesLV.getItems().remove(f);
+                CurrentFileManager.saveFileBeforeSelectionChange(StaticResource.currentFile);
+                CurrentFileManager.updateCurrentlyOpenedFile(f);
+                currentFilesLV.getSelectionModel().select(f);
+                leftSideTabPane.getSelectionModel().select(0);//switch to the first tab
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
+
+    }
 
     private class DefaultContextMenu extends ContextMenu {
     }

@@ -76,12 +76,16 @@ public class DB {
         return files;
     }
 
-    public List<UserFile> getAllOpenedFiles() throws SQLException {
+    public List<UserFile> getAllClosedFiles() throws SQLException {
+        return getListFilesByState(0);
+    }
+
+    private List<UserFile> getListFilesByState(int isOpen) throws SQLException {
         List<UserFile> files = new ArrayList<>();
 
         Connection connection = getConnection();
 
-        String query = "SELECT * FROM " + FILE_TABLE + " WHERE is_open = 1";
+        String query = "SELECT * FROM " + FILE_TABLE + " WHERE is_open = " + isOpen;
 
         Statement statement = connection.createStatement();
         ResultSet set = statement.executeQuery(query);
@@ -95,13 +99,17 @@ public class DB {
                     set.getString("content"),
                     set.getLong("created_time"),
                     set.getLong("updated_time"),
-                    1
+                    isOpen
 
             ));
         }
         closeConnection(connection);
 
         return files;
+    }
+
+    public List<UserFile> getAllOpenedFiles() throws SQLException {
+        return getListFilesByState(1);
     }
 
     private void createTables() throws SQLException {

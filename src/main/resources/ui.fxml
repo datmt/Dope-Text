@@ -14,7 +14,7 @@
 
 <BorderPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.datmt.dope_text.Controller">
    <center>
-      <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+      <TabPane tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
         <tabs>
           <Tab closable="false" text="Current">
                <content>
@@ -45,15 +45,34 @@
                   </VBox>
                </content>
           </Tab>
+            <Tab text="Settings">
+               <content>
+                  <VBox prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <Label text="Current data location">
+                           <VBox.margin>
+                              <Insets bottom="5.0" />
+                           </VBox.margin>
+                        </Label>
+                        <Label fx:id="dbLocationLB" />
+                        <Button mnemonicParsing="false" onAction="#changeDbLocation" text="Change">
+                           <VBox.margin>
+                              <Insets top="5.0" />
+                           </VBox.margin>
+                        </Button>
+                     </children>
+                  </VBox>
+               </content>
+            </Tab>
         </tabs>
       </TabPane>
    </center>
    <left>
-      <VBox prefWidth="300.0" BorderPane.alignment="CENTER">
+      <VBox fx:id="leftPane" prefWidth="300.0" BorderPane.alignment="CENTER">
          <children>
-            <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+            <TabPane fx:id="leftSideTabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
               <tabs>
-                <Tab closable="false" text="Current">
+                <Tab closable="false" text="Open files">
                      <content>
                         <VBox>
                            <children>
@@ -61,26 +80,21 @@
                                  <VBox.margin>
                                     <Insets bottom="5.0" top="5.0" />
                                  </VBox.margin></TextField>
-                              <ListView fx:id="currentFiles" VBox.vgrow="ALWAYS" />
+                              <ListView fx:id="currentFilesLV" VBox.vgrow="ALWAYS" />
                            </children>
                         </VBox>
                      </content>
                 </Tab>
-                <Tab closable="false" text="Closed files">
+                  <Tab text="Snapshots">
                      <content>
-                        <ListView fx:id="historyFiles" prefHeight="200.0" prefWidth="200.0" />
-                     </content>
-                </Tab>
-                  <Tab text="Settings">
-                     <content>
-                        <VBox prefHeight="200.0" prefWidth="100.0">
-                           <children>
-                              <Label text="Current data location" />
-                              <Label fx:id="dbLocationLB" />
-                              <Button mnemonicParsing="false" onAction="#changeDbLocation" text="Change" />
-                           </children></VBox>
+                        <VBox prefHeight="200.0" prefWidth="100.0" />
                      </content>
                   </Tab>
+                <Tab closable="false" text="Closed files">
+                     <content>
+                        <ListView fx:id="closedFilesLV" />
+                     </content>
+                </Tab>
               </tabs>
             </TabPane>
             <HBox />

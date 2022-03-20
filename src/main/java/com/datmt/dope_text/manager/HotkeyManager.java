@@ -4,6 +4,7 @@ import com.datmt.dope_text.db.DB;
 import com.datmt.dope_text.db.model.UserFile;
 import com.datmt.dope_text.helper.Log1;
 import com.datmt.dope_text.helper.TextSearcher;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -30,6 +31,7 @@ public class HotkeyManager {
         final KeyCombination export = new KeyCodeCombination(KeyCode.E, KeyCombination.CONTROL_DOWN);
         final KeyCombination exportAs = new KeyCodeCombination(KeyCode.E, KeyCombination.CONTROL_DOWN, KeyCombination.SHIFT_DOWN);
         final KeyCombination open = new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN);
+        final KeyCombination quit = new KeyCodeCombination(KeyCode.Q, KeyCombination.CONTROL_DOWN);
         final KeyCombination increaseSize = new KeyCodeCombination(KeyCode.EQUALS, KeyCombination.CONTROL_DOWN);
         final KeyCombination decreaseSize = new KeyCodeCombination(KeyCode.MINUS, KeyCombination.CONTROL_DOWN);
 
@@ -54,6 +56,8 @@ public class HotkeyManager {
             } catch (SQLException | IOException e) {
                 Log1.logger.error(e);
             }
+        } else if (quit.match(ke)) {
+            Platform.exit();
         }
     }
 

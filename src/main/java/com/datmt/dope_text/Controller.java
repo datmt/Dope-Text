@@ -17,6 +17,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
@@ -47,6 +48,9 @@ public class Controller {
     TextField fileFilterTF;
 
     @FXML
+    TextField closedFileFilterTF;
+
+    @FXML
     ListView<UserFile> currentFilesLV;
 
     @FXML
@@ -64,8 +68,12 @@ public class Controller {
 
     @FXML
     TabPane leftSideTabPane;
+
     @FXML
     Label dbLocationLB;
+
+    @FXML
+    Tab currentFileTab;
 
     @FXML
     public void initialize() throws SQLException {
@@ -98,9 +106,9 @@ public class Controller {
         VBox.setVgrow(codeArea, Priority.ALWAYS);
 
         StaticResource.codeArea = codeArea;
-        StaticResource.allCurrentlyOpenFiles = allCurrentlyOpenFiles;
         StaticResource.currentFilesLV = currentFilesLV;
         StaticResource.closedFilesLV = closedFilesLV;
+        StaticResource.currentFileTab = currentFileTab;
 
         currentFilesListViewEventHandler();
         closeFilesListViewEventHandler();
@@ -122,6 +130,7 @@ public class Controller {
 
     private void registerFilterEvent() {
         fileFilterTF.textProperty().addListener((observable, oldValue, newValue) -> currentFilesLV.setItems(FXCollections.observableList(allCurrentlyOpenFiles.stream().filter(t -> t.getFileName().toUpperCase(Locale.ROOT).contains(newValue.toUpperCase(Locale.ROOT))).collect(Collectors.toList()))));
+        closedFileFilterTF.textProperty().addListener((observable, oldValue, newValue) -> closedFilesLV.setItems(FXCollections.observableList(allClosedFiles.stream().filter(t -> t.getFileName().toUpperCase(Locale.ROOT).contains(newValue.toUpperCase(Locale.ROOT))).collect(Collectors.toList()))));
     }
 
 
@@ -138,6 +147,7 @@ public class Controller {
             currentFilesLV.getSelectionModel().select(allCurrentlyOpenFiles.stream().filter(t -> t.getId().equals(finalF.getId())).findFirst().orElse(null));
             CurrentFileManager.updateCurrentlyOpenedFile(f);
             CurrentFileManager.selectCurrentFileById(f.getId(), currentFilesLV);
+            currentFileTab.setText(f.getFileName());
         }
 
 

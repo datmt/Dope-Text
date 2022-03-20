@@ -26,6 +26,7 @@ public class CurrentFileManager {
 
         if (StaticResource.stage != null) {
             StaticResource.stage.setTitle(file.getFileName() + " | Dope Text");
+            StaticResource.currentFileTab.setText(file.getFileName());
         }
 
     }
@@ -67,15 +68,6 @@ public class CurrentFileManager {
     }
 
 
-
-    public static void exportToLocalFile() {
-
-    }
-
-    public static void openLocalFile() {
-
-    }
-
     public static UserFile getFileFromListViewById(Long id) {
         if (StaticResource.currentFilesLV == null) {
             Log1.logger.error("List view is null");
@@ -97,11 +89,6 @@ public class CurrentFileManager {
         StaticResource.closedFilesLV.getItems().add(StaticResource.currentFilesLV .getSelectionModel().getSelectedItem());
         StaticResource.currentFilesLV .getItems().remove(StaticResource.currentFilesLV .getSelectionModel().getSelectedItem());
 
-        UserFile userFileInStaticList = StaticResource.allCurrentlyOpenFiles.stream().filter(t -> t.getId().equals(StaticResource.currentFile.getId())).findFirst().orElse(null);
-
-        if (userFileInStaticList!= null) {
-            StaticResource.allCurrentlyOpenFiles.remove(userFileInStaticList);
-        }
 
         try {
             DB db = new DB();

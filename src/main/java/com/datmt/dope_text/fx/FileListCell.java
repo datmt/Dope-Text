@@ -38,6 +38,7 @@ public class FileListCell extends TextFieldListCell<UserFile> {
                     ex.printStackTrace();
                 }
 
+                StaticResource.currentFileTab.setText(file.getFileName());
 
                 return file;
             }

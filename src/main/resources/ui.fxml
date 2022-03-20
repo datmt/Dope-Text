@@ -16,7 +16,7 @@
    <center>
       <TabPane tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
         <tabs>
-          <Tab closable="false" text="Current">
+          <Tab fx:id="currentFileTab" closable="false" text="Current">
                <content>
                   <VBox>
                      <children>
@@ -92,7 +92,16 @@
                   </Tab>
                 <Tab closable="false" text="Closed files">
                      <content>
-                        <ListView fx:id="closedFilesLV" />
+                        <VBox>
+                           <children>
+                              <TextField fx:id="closedFileFilterTF">
+                                 <VBox.margin>
+                                    <Insets bottom="5.0" />
+                                 </VBox.margin>
+                              </TextField>
+                              <ListView fx:id="closedFilesLV" VBox.vgrow="ALWAYS" />
+                           </children>
+                        </VBox>
                      </content>
                 </Tab>
               </tabs>

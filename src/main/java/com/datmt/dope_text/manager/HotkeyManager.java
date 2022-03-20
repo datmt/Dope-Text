@@ -114,7 +114,9 @@ public class HotkeyManager {
         CurrentFileManager.closeCurrentFile();
         if (StaticResource.currentFilesLV != null && StaticResource.currentFilesLV.getItems().size() > 0) {
             try {
-                CurrentFileManager.updateCurrentlyOpenedFile(StaticResource.currentFilesLV.getItems().get(0));
+                UserFile newSelectedFile = StaticResource.currentFilesLV.getItems().get(0);
+                CurrentFileManager.updateCurrentlyOpenedFile(newSelectedFile);
+                StaticResource.currentFilesLV.getSelectionModel().select(newSelectedFile);
             } catch (SQLException e) {
                 Log1.logger.error("Exception when setting default selected file");
             }

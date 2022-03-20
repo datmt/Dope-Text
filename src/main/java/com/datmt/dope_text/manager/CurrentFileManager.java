@@ -90,7 +90,7 @@ public class CurrentFileManager {
 
     public static void closeCurrentFile() {
         if (StaticResource.currentFilesLV == null || StaticResource.closedFilesLV == null) {
-            Log1.logger.error("List view is null");
+            Log1.logger.error("current List view or closed files list view is null ");
             return;
         }
 
@@ -119,9 +119,8 @@ public class CurrentFileManager {
 
     public static void selectCurrentFileById(Long id) {
         UserFile file = getFileFromListViewById(id);
-        if (file != null) {
-            ListView<UserFile> currentFiles = (ListView<UserFile>) StaticResource.scene.lookup("#currentFilesLV");
-            currentFiles.getSelectionModel().select(file);
+        if (file != null && StaticResource.closedFilesLV != null) {
+            StaticResource.closedFilesLV.getSelectionModel().select(file);
         }
     }
 

@@ -100,6 +100,7 @@ public class Controller {
         StaticResource.codeArea = codeArea;
         StaticResource.allCurrentlyOpenFiles = allCurrentlyOpenFiles;
         StaticResource.currentFilesLV = currentFilesLV;
+        StaticResource.closedFilesLV = closedFilesLV;
 
         currentFilesListViewEventHandler();
         closeFilesListViewEventHandler();

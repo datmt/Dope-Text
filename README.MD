@@ -49,6 +49,9 @@ Ctrl+F: Find text in file
 
 Ctrl+W: Close the current file
 
+Ctrl+Q: Close the application
+
 Ctrl+=: Increase font size
+
 Ctrl+-: Decrease font size
 ```

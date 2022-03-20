@@ -117,6 +117,7 @@ public class Controller {
         registerFilterEvent();
 
         populateDBLocation();
+        logger.info("start version 1.0.6");
     }
 
     private void populateDBLocation() {

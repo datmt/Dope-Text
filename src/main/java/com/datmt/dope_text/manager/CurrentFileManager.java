@@ -6,11 +6,15 @@ import com.datmt.dope_text.db.model.UserFile;
 import com.datmt.dope_text.helper.FileHelper;
 import com.datmt.dope_text.helper.Log1;
 import javafx.scene.control.ListView;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.fxmisc.richtext.CodeArea;
 
 import java.sql.SQLException;
 
 public class CurrentFileManager {
+    private static Logger logger = LogManager.getLogger(CurrentFileManager.class.getName());
+    
     public static void updateCurrentlyOpenedFile(UserFile file) throws SQLException {
         if (file == null || file.equals(StaticResource.currentFile)) {
             return;
@@ -34,28 +38,27 @@ public class CurrentFileManager {
 
     public static void saveFileBeforeSelectionChange(UserFile file) throws SQLException {
 
-        if (file.getContent().equals(StaticResource.codeArea.getText()))
-            return;
+        logger.info("saving file before selection change: {}", file.getFileName());
 
-        saveCurrentFileToDB(StaticResource.codeArea.getText());
+        if (file.getContent().equals(StaticResource.codeArea.getText())) {
+            logger.info("Content did not change. No saving needed");
+            return;
+        }
+
+        file.setContent(StaticResource.codeArea.getText());
+        saveCurrentFileToDB(StaticResource.codeArea.getText(), file.getId());
         saveCurrentFileToDisk();
     }
 
-    public static void saveCurrentFileToDB(String content) throws SQLException{
-        UserFile file = StaticResource.currentFile;
-        if (file == null) {
-            Log1.logger.error("current file is null");
-            return;
-        }
+    public static void saveCurrentFileToDB(String content, Long fileId) throws SQLException{
         DB db = new DB();
-        file.setContent(content);
-        db.updateFileContent(file.getId(), content);
+        db.updateFileContent(fileId, content);
     }
 
     public static void saveCurrentFileToDisk() {
         UserFile file = StaticResource.currentFile;
         if (file == null || file.getLocalPath() == null) {
-            Log1.logger.warn("File not saved: current file is null or local path is not set");
+            logger.warn("File not saved: current file is null or local path is not set");
             return;
         }
 
@@ -70,7 +73,7 @@ public class CurrentFileManager {
 
     public static UserFile getFileFromListViewById(Long id) {
         if (StaticResource.currentFilesLV == null) {
-            Log1.logger.error("List view is null");
+            logger.error("List view is null");
             return null;
         }
         return StaticResource.currentFilesLV.getItems().stream().filter(t -> t.getId().equals(id)).findFirst().orElse(null);
@@ -82,7 +85,7 @@ public class CurrentFileManager {
 
     public static void closeCurrentFile() {
         if (StaticResource.currentFilesLV == null || StaticResource.closedFilesLV == null) {
-            Log1.logger.error("current List view or closed files list view is null ");
+            logger.error("current List view or closed files list view is null ");
             return;
         }
 

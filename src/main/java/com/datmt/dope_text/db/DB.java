@@ -2,8 +2,9 @@ package com.datmt.dope_text.db;
 
 import com.datmt.dope_text.db.model.UserFile;
 import com.datmt.dope_text.db.model.UserFileTable;
-import com.datmt.dope_text.helper.Log1;
 import com.datmt.dope_text.helper.UserPrefs;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.sql.Connection;
@@ -17,11 +18,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+
 public class DB {
     private static final String FILE_TABLE = "Files";
     private static final String KEY_VALUE_TABLE = "KeysValues";
 
     private Connection connection;
+    private static Logger logger = LogManager.getLogger(DB.class.getName());
 
     public static void main(String[] args) throws SQLException {
         DB db = new DB();
@@ -140,6 +143,8 @@ public class DB {
     }
 
     public UserFile createFile(String content, String fileName) throws SQLException {
+
+        logger.info("Saving file {} ", fileName);
         String sql = "INSERT INTO " + FILE_TABLE + " (file_hash, file_name, content, created_time, updated_time) VALUES (?, ?, ?, ?, ?)";
         Connection connection = getConnection();
 
@@ -225,6 +230,9 @@ public class DB {
     }
 
     public void updateFileContent(Long fileId, String fileContent) throws SQLException {
+
+        logger.info("update content for file {} ", fileId);
+
         updateSingleFileAttribute(fileId, UserFileTable.FILE_CONTENT, fileContent);
     }
 
@@ -237,7 +245,9 @@ public class DB {
     }
 
     public void updateSingleFileAttribute(Long fileId, String attribute, String value) throws SQLException {
-        Log1.logger.info("Update attribute {} of file {} with value {}", attribute, fileId, value);
+
+        logger.info(" update {} for file {} with value {}", attribute, fileId, value);
+
         String sql = "UPDATE " + FILE_TABLE + " SET " + attribute + " = ?, updated_time = ? WHERE id = ?";
         Connection connection = getConnection();
 
@@ -254,6 +264,9 @@ public class DB {
 
 
     public void updateFileOpenStatus(Long fileId, int openStatus) throws SQLException {
+
+        logger.debug("Update file {} to open status {}", fileId, openStatus);
+
         String sql = "UPDATE " + FILE_TABLE + " SET is_open = ?, updated_time = ? WHERE id = ?";
         Connection connection = getConnection();
 

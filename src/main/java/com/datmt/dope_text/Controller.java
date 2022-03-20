@@ -3,7 +3,7 @@ package com.datmt.dope_text;
 import com.datmt.dope_text.db.DB;
 import com.datmt.dope_text.db.model.UserFile;
 import com.datmt.dope_text.fx.FileListCell;
-import com.datmt.dope_text.helper.Log1;
+import com.datmt.dope_text.helper.FileHelper;
 import com.datmt.dope_text.helper.TextSearcher;
 import com.datmt.dope_text.helper.UserPrefs;
 import com.datmt.dope_text.manager.CurrentFileManager;
@@ -11,7 +11,6 @@ import com.datmt.dope_text.manager.StaticResource;
 import javafx.collections.FXCollections;
 import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ContextMenu;
@@ -20,13 +19,13 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
 
@@ -75,15 +74,14 @@ public class Controller {
     @FXML
     Tab currentFileTab;
 
+    private static final Logger logger = LogManager.getLogger(Controller.class.getName());
+
     @FXML
     public void initialize() throws SQLException {
         CodeArea codeArea = new CodeArea();
         codeArea.setParagraphGraphicFactory(LineNumberFactory.get(codeArea));
         codeArea.setContextMenu(new DefaultContextMenu());
         codeArea.setId("codeArea");
-
-//        Label tutorial = new Label("Ctrl+S: Save, Ctrl+N: new, Ctrl+W: Close, Ctrl+F: Find, Ctrl+E: Export");
-
         startTab.getChildren().addAll(codeArea);
 
         DB db = new DB();
@@ -224,7 +222,8 @@ public class Controller {
                         if (!StaticResource.codeArea.getText().equals(StaticResource.currentFile.getContent())) {
 
                             try {
-                                CurrentFileManager.saveCurrentFileToDB(StaticResource.codeArea.getText());
+                                StaticResource.currentFile.setContent(StaticResource.codeArea.getText());
+                                CurrentFileManager.saveCurrentFileToDB(StaticResource.codeArea.getText(), StaticResource.currentFile.getId());
                                 CurrentFileManager.saveCurrentFileToDisk();
                             } catch (SQLException ex) {
                                 ex.printStackTrace();

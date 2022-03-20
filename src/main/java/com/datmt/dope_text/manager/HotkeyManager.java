@@ -2,17 +2,17 @@ package com.datmt.dope_text.manager;
 
 import com.datmt.dope_text.db.DB;
 import com.datmt.dope_text.db.model.UserFile;
-import com.datmt.dope_text.helper.Log1;
 import com.datmt.dope_text.helper.TextSearcher;
 import javafx.application.Platform;
 import javafx.scene.Scene;
-import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.FileChooser;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,6 +23,7 @@ import java.sql.SQLException;
 import java.util.UUID;
 
 public class HotkeyManager {
+    private static Logger logger = LogManager.getLogger(HotkeyManager.class.getName());
     public static void manage(KeyEvent ke, Scene scene) {
         final KeyCombination save = new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN);
         final KeyCombination createNew = new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN);
@@ -54,7 +55,7 @@ public class HotkeyManager {
             try {
                 open(scene, ke);
             } catch (SQLException | IOException e) {
-                Log1.logger.error(e);
+                logger.error(e);
             }
         } else if (quit.match(ke)) {
             Platform.exit();
@@ -64,7 +65,7 @@ public class HotkeyManager {
     private static void export(KeyEvent ke, Scene scene) {
         ke.consume();
         if (StaticResource.currentFile != null && StaticResource.currentFile.getLocalPath() != null && Files.exists(Path.of(StaticResource.currentFile.getLocalPath()))) {
-            Log1.logger.info("Already exported to file");
+            logger.info("Already exported to file");
             return;
         }
 
@@ -85,13 +86,13 @@ public class HotkeyManager {
                 //update file path to db and the currently select file
                 UserFile currentFile = CurrentFileManager.getFileFromListViewById(StaticResource.currentFile.getId());
                 if (currentFile == null) {
-                    Log1.logger.error("Current file in list view is null");
+                    logger.error("Current file in list view is null");
                     return;
                 }
                 currentFile.setLocalPath(file.getAbsolutePath());
                 CurrentFileManager.updateFilePath(currentFile.getId(), file.getAbsolutePath());
             } catch (IOException | SQLException ex) {
-                Log1.logger.error(ex);
+                logger.error(ex);
             }
         }
 
@@ -122,7 +123,7 @@ public class HotkeyManager {
                 CurrentFileManager.updateCurrentlyOpenedFile(newSelectedFile);
                 StaticResource.currentFilesLV.getSelectionModel().select(newSelectedFile);
             } catch (SQLException e) {
-                Log1.logger.error("Exception when setting default selected file");
+                logger.error("Exception when setting default selected file");
             }
 
         }
@@ -155,12 +156,11 @@ public class HotkeyManager {
         if (StaticResource.currentFile != null) {
             StaticResource.currentFile.setContent(StaticResource.codeArea.getText());
             try {
-                CurrentFileManager.saveCurrentFileToDB(StaticResource.codeArea.getText());
+                CurrentFileManager.saveCurrentFileToDB(StaticResource.codeArea.getText(), StaticResource.currentFile.getId());
                 CurrentFileManager.saveCurrentFileToDisk();
             } catch (SQLException ex) {
-                Log1.logger.error(ex);
+                logger.error(ex);
             }
-
         }
 
         ke.consume(); // <-- stops passing the event to next node

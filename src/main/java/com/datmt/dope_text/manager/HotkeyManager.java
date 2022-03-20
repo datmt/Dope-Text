@@ -110,13 +110,21 @@ public class HotkeyManager {
         ke.consume(); // <-- stops passing the event to next node
     }
 
-    private static void closeCurrentFile(KeyEvent ke, Scene scene) {
+    private static void closeCurrentFile(KeyEvent ke, Scene scene)  {
         CurrentFileManager.closeCurrentFile();
+        if (StaticResource.currentFilesLV != null && StaticResource.currentFilesLV.getItems().size() > 0) {
+            try {
+                CurrentFileManager.updateCurrentlyOpenedFile(StaticResource.currentFilesLV.getItems().get(0));
+            } catch (SQLException e) {
+                Log1.logger.error("Exception when setting default selected file");
+            }
+
+        }
+
         ke.consume(); // <-- stops passing the event to next node
     }
 
     private static void createNew(KeyEvent ke, Scene scene) {
-        ListView currentFiles = (ListView) scene.lookup("#currentFiles");
 
         try {
             if (StaticResource.currentFile != null)
@@ -125,8 +133,8 @@ public class HotkeyManager {
 
             UserFile f = db.createFile("", "new dope-text-" + UUID.randomUUID().toString().replace("-", "").substring(0, 5));
 
-            currentFiles.getItems().add(f);
-            currentFiles.getSelectionModel().select(f);
+            StaticResource.currentFilesLV .getItems().add(f);
+            StaticResource.currentFilesLV .getSelectionModel().select(f);
             CurrentFileManager.updateCurrentlyOpenedFile(f);
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -175,14 +183,14 @@ public class HotkeyManager {
         if (f != null) {
             DB db = new DB();
             UserFile existingFile = db.findFindByLocalPath(f.getAbsolutePath());
-            ListView currentFiles = (ListView) scene.lookup("#currentFiles");
+
             if (existingFile == null) {
                 UserFile newFile = db.createFile(Files.readString(f.toPath()), f.getName());
                 db.updateLocalFilePath(newFile.getId(), f.getAbsolutePath());
                 newFile.setLocalPath(f.getAbsolutePath());
 
-                currentFiles.getItems().add(newFile);
-                currentFiles.getSelectionModel().select(newFile);
+                StaticResource.currentFilesLV .getItems().add(newFile);
+                StaticResource.currentFilesLV .getSelectionModel().select(newFile);
 
                 CurrentFileManager.updateCurrentlyOpenedFile(newFile);
                 CurrentFileManager.selectCurrentFileById(newFile.getId());

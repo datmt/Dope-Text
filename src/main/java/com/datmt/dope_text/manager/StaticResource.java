@@ -18,9 +18,7 @@ public class StaticResource {
     public static Scene scene;
     public static Stage stage;
     public static List<UserFile> allCurrentlyOpenFiles;
+    public static ListView<UserFile> currentFilesLV;
+    public static ListView<UserFile> closedFilesLV;
     public static int currentFontSize = 13;
-
-    public static ListView<UserFile> getCurrentFilesLV() {
-        return (ListView<UserFile>) scene.lookup("#currentFiles");
-    }
 }

@@ -99,6 +99,7 @@ public class Controller {
 
         StaticResource.codeArea = codeArea;
         StaticResource.allCurrentlyOpenFiles = allCurrentlyOpenFiles;
+        StaticResource.currentFilesLV = currentFilesLV;
 
         currentFilesListViewEventHandler();
         closeFilesListViewEventHandler();
@@ -135,6 +136,7 @@ public class Controller {
             UserFile finalF = f;
             currentFilesLV.getSelectionModel().select(allCurrentlyOpenFiles.stream().filter(t -> t.getId().equals(finalF.getId())).findFirst().orElse(null));
             CurrentFileManager.updateCurrentlyOpenedFile(f);
+            CurrentFileManager.selectCurrentFileById(f.getId(), currentFilesLV);
         }
 
 

@@ -77,15 +77,25 @@ public class CurrentFileManager {
     }
 
     public static UserFile getFileFromListViewById(Long id) {
-        ListView<UserFile> currentFiles = (ListView<UserFile>) StaticResource.scene.lookup("#currentFilesLV");
-        return currentFiles.getItems().stream().filter(t -> t.getId().equals(id)).findFirst().orElse(null);
+        if (StaticResource.currentFilesLV == null) {
+            Log1.logger.error("List view is null");
+            return null;
+        }
+        return StaticResource.currentFilesLV.getItems().stream().filter(t -> t.getId().equals(id)).findFirst().orElse(null);
+    }
+
+    public static UserFile getFileFromListViewById(Long id, ListView<UserFile> listView) {
+        return listView.getItems().stream().filter(t -> t.getId().equals(id)).findFirst().orElse(null);
     }
 
     public static void closeCurrentFile() {
-        ListView<UserFile> currentFilesLV = (ListView) StaticResource.scene.lookup("#currentFilesLV");
-        ListView<UserFile> closedFilesLV = (ListView) StaticResource.scene.lookup("#closedFilesLV");
-        closedFilesLV.getItems().add(currentFilesLV.getSelectionModel().getSelectedItem());
-        currentFilesLV.getItems().remove(currentFilesLV.getSelectionModel().getSelectedItem());
+        if (StaticResource.currentFilesLV == null || StaticResource.closedFilesLV == null) {
+            Log1.logger.error("List view is null");
+            return;
+        }
+
+        StaticResource.closedFilesLV.getItems().add(StaticResource.currentFilesLV .getSelectionModel().getSelectedItem());
+        StaticResource.currentFilesLV .getItems().remove(StaticResource.currentFilesLV .getSelectionModel().getSelectedItem());
 
         UserFile userFileInStaticList = StaticResource.allCurrentlyOpenFiles.stream().filter(t -> t.getId().equals(StaticResource.currentFile.getId())).findFirst().orElse(null);
 
@@ -97,8 +107,8 @@ public class CurrentFileManager {
             DB db = new DB();
             db.updateFileOpenStatus(StaticResource.currentFile.getId(), 0);
 
-            if (currentFilesLV.getItems().size() > 0)
-                CurrentFileManager.updateCurrentlyOpenedFile(currentFilesLV.getItems().get(0));
+            if (StaticResource.currentFilesLV .getItems().size() > 0)
+                CurrentFileManager.updateCurrentlyOpenedFile(StaticResource.currentFilesLV .getItems().get(0));
             else
                 StaticResource.codeArea.replaceText("");
 
@@ -112,6 +122,14 @@ public class CurrentFileManager {
         if (file != null) {
             ListView<UserFile> currentFiles = (ListView<UserFile>) StaticResource.scene.lookup("#currentFilesLV");
             currentFiles.getSelectionModel().select(file);
+        }
+    }
+
+    public static void selectCurrentFileById(Long id, ListView<UserFile> listView) {
+        UserFile file = getFileFromListViewById(id, listView);
+        if (file != null) {
+
+            listView.getSelectionModel().select(file);
         }
     }
 }

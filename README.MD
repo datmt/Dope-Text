@@ -24,6 +24,16 @@ PR/MR are welcome.
 
 ![image](https://user-images.githubusercontent.com/14150061/159109830-c2322c2a-cf31-471a-90c0-845443d93763.png)
 
+Creative story telling
+
+!Notice: Please add gtk version to write in non-ascii languages (Vietnamese for example) in Ubuntu (or maybe other systems):
+```
+java -jar -Djdk.gtk.version=2 ~/bin/dope.jar
+```
+
+![image](https://user-images.githubusercontent.com/14150061/159154594-2d828f45-13a9-428f-98e9-918c7a7a6293.png)
+
+
 # Quick tutorial
 
 ```shell

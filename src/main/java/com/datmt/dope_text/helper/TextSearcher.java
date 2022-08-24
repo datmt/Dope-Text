@@ -19,7 +19,7 @@ public class TextSearcher {
 
 
         for (int id : startIndex) {
-            StaticResource.codeArea.setStyleClass(id, id + searchWord.length(), "hlt");
+//            StaticResource.codeArea.setStyleClass(id, id + searchWord.length(), "hlt");
         }
     }
 
@@ -40,7 +40,9 @@ public class TextSearcher {
     }
 
     public static void clearHighlight() {
+        /*
         if (StaticResource.codeArea.getText().length() > 0)
             StaticResource.codeArea.clearStyle(0, StaticResource.codeArea.getText().length());
+         */
     }
 }

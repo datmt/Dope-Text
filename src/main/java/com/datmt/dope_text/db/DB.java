@@ -246,8 +246,6 @@ public class DB {
 
     public void updateSingleFileAttribute(Long fileId, String attribute, String value) throws SQLException {
 
-        logger.info(" update {} for file {} with value {}", attribute, fileId, value);
-
         String sql = "UPDATE " + FILE_TABLE + " SET " + attribute + " = ?, updated_time = ? WHERE id = ?";
         Connection connection = getConnection();
 

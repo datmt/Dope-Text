@@ -18,6 +18,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Priority;
@@ -74,15 +75,12 @@ public class Controller {
     @FXML
     Tab currentFileTab;
 
+    @FXML
+    TextArea codeTextArea;
     private static final Logger logger = LogManager.getLogger(Controller.class.getName());
 
     @FXML
     public void initialize() throws SQLException {
-        CodeArea codeArea = new CodeArea();
-        codeArea.setParagraphGraphicFactory(LineNumberFactory.get(codeArea));
-        codeArea.setContextMenu(new DefaultContextMenu());
-        codeArea.setId("codeArea");
-        startTab.getChildren().addAll(codeArea);
 
         DB db = new DB();
 
@@ -100,14 +98,13 @@ public class Controller {
             return flc;
         });
 
-        codeArea.setAutoHeight(true);
-        VBox.setVgrow(codeArea, Priority.ALWAYS);
 
-        StaticResource.codeArea = codeArea;
+        StaticResource.codeArea = codeTextArea;
         StaticResource.currentFilesLV = currentFilesLV;
         StaticResource.closedFilesLV = closedFilesLV;
         StaticResource.currentFileTab = currentFileTab;
 
+        codeTextArea.setStyle("");
         currentFilesListViewEventHandler();
         closeFilesListViewEventHandler();
 
@@ -237,7 +234,7 @@ public class Controller {
                 };
             }
         };
-        svc.setPeriod(Duration.seconds(10));
+        svc.setPeriod(Duration.seconds(120));
         svc.start();
     }
 

@@ -6,6 +6,7 @@ import com.datmt.dope_text.db.model.UserFile;
 import com.datmt.dope_text.helper.FileHelper;
 import com.datmt.dope_text.helper.Log1;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.fxmisc.richtext.CodeArea;
@@ -20,9 +21,9 @@ public class CurrentFileManager {
             return;
         }
 
-        CodeArea codeArea = StaticResource.codeArea;
-        codeArea.replaceText(file.getContent());
-        codeArea.scrollToPixel(0, 0);
+        TextArea codeArea = StaticResource.codeArea;
+        codeArea.setText(file.getContent());
+        codeArea.getScrollTop();
         StaticResource.currentFile = file;
 
         DB db = new DB();
@@ -100,7 +101,7 @@ public class CurrentFileManager {
             if (StaticResource.currentFilesLV .getItems().size() > 0)
                 CurrentFileManager.updateCurrentlyOpenedFile(StaticResource.currentFilesLV .getItems().get(0));
             else
-                StaticResource.codeArea.replaceText("");
+                StaticResource.codeArea.setText("");
 
         } catch (SQLException ex) {
             ex.printStackTrace();

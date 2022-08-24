@@ -202,7 +202,7 @@ public class HotkeyManager {
                 CurrentFileManager.selectCurrentFileById(newFile.getId());
             } else {
                 CurrentFileManager.updateCurrentlyOpenedFile(existingFile);
-                StaticResource.codeArea.replaceText(Files.readString(f.toPath()));
+                StaticResource.codeArea.setText(Files.readString(f.toPath()));
                 CurrentFileManager.selectCurrentFileById(existingFile.getId());
             }
         }

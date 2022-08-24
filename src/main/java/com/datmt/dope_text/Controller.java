@@ -258,12 +258,15 @@ public class Controller {
 
 
     public void toggleLightTheme() {
-       if (useLightThemeCheckbox.isSelected()) {
-           rootPane.getScene().getStylesheets().remove(0);
-       } else {
-           rootPane.getScene().getStylesheets().add(Objects.requireNonNull(getClass().getClassLoader().getResource("style-dark.css").toExternalForm()));
-       }
+
+        rootPane.getScene().getStylesheets().remove(0);
+        if (useLightThemeCheckbox.isSelected()) {
+            rootPane.getScene().getStylesheets().add(Objects.requireNonNull(getClass().getClassLoader().getResource("style-light.css").toExternalForm()));
+        } else {
+            rootPane.getScene().getStylesheets().add(Objects.requireNonNull(getClass().getClassLoader().getResource("style-dark.css").toExternalForm()));
+        }
     }
+
     public void changeDbLocation() {
         FileChooser chooser = new FileChooser();
         File f = chooser.showOpenDialog(rootPane.getScene().getWindow());

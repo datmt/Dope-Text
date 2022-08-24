@@ -1,0 +1,60 @@
+/*
+1c2025: bg color
+0e0f14: code editor bg
+b6b8b9: code editor text color
+ffd733: input/tab border color
+24231b: button text color
+ */
+
+
+#leftPane {
+    -fx-padding: 0 10px 0 0;
+    -fx-border-width: 0 1px 0 0;
+}
+
+#currentFilesLV .list-cell {
+    -fx-text-fill: #222;
+}
+
+#currentFilesLV .list-cell:selected {
+    -fx-background-color: #ffb51a;
+}
+
+
+.code-area .text {
+    -fx-fill: #222;
+}
+
+.code-area .caret {
+    -fx-stroke: #ffb51a;
+    -fx-arc-width: 3;
+}
+
+.code-area .hlt {
+    -fx-background-color: #ffb51a;
+    -rtfx-background-color: #ffb51a;
+    -fx-fill: red;
+    -rtfx-fill: red;
+    -fx-text-fill: blue;
+}
+
+
+.code-area .lineno, .code-area .lineno *{
+    -fx-fill: #222;
+}
+.code-area .selection {
+    -fx-fill: #fff2a0;
+}
+
+.code-area .paragraph-box {
+    -fx-padding: 5px;
+    -fx-fill: #222;
+}
+
+
+
+/*.tab-header-area .tab  {*/
+
+/*    -fx-border-style: none none solid none;*/
+/*    -fx-border-color:  #ffd733;*/
+/*}*/

@@ -26,8 +26,14 @@ public class DB {
     private Connection connection;
     private static Logger logger = LogManager.getLogger(DB.class.getName());
 
-    public static void main(String[] args) throws SQLException {
-        DB db = new DB();
+   
+    private static DB db;
+    public static DB getInstance() throws SQLException {
+       if (db == null)  {
+           db = new DB();
+       }
+       
+       return db;
     }
 
     private void initConnection() throws SQLException {

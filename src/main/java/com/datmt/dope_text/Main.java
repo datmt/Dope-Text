@@ -20,7 +20,7 @@ public class Main extends Application {
         primaryStage.setTitle("Dope Text");
 
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(Objects.requireNonNull(getClass().getClassLoader().getResource("style.css").toExternalForm()));
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getClassLoader().getResource("style-dark.css").toExternalForm()));
         registerHotKeys((scene));
 
         StaticResource.scene = scene;

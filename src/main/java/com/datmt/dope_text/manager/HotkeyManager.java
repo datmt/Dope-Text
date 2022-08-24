@@ -136,7 +136,7 @@ public class HotkeyManager {
         try {
             if (StaticResource.currentFile != null)
                 CurrentFileManager.saveFileBeforeSelectionChange(StaticResource.currentFile);
-            DB db = new DB();
+            DB db = DB.getInstance();
 
             UserFile f = db.createFile("", "new dope-text-" + UUID.randomUUID().toString().replace("-", "").substring(0, 5));
 
@@ -187,7 +187,7 @@ public class HotkeyManager {
         File f = chooser.showOpenDialog(scene.getWindow());
 
         if (f != null) {
-            DB db = new DB();
+            DB db = DB.getInstance();
             UserFile existingFile = db.findFindByLocalPath(f.getAbsolutePath());
 
             if (existingFile == null) {

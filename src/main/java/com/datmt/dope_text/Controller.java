@@ -3,7 +3,6 @@ package com.datmt.dope_text;
 import com.datmt.dope_text.db.DB;
 import com.datmt.dope_text.db.model.UserFile;
 import com.datmt.dope_text.fx.FileListCell;
-import com.datmt.dope_text.helper.FileHelper;
 import com.datmt.dope_text.helper.TextSearcher;
 import com.datmt.dope_text.helper.UserPrefs;
 import com.datmt.dope_text.manager.CurrentFileManager;
@@ -33,6 +32,7 @@ import java.io.File;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class Controller {
@@ -63,7 +63,10 @@ public class Controller {
     TextField searchTF;
 
     @FXML
-    CheckBox wrapTexCheckbox;
+    CheckBox wrapTextCheckbox;
+
+    @FXML
+    CheckBox useLightThemeCheckbox;
 
     @FXML
     TabPane leftSideTabPane;
@@ -84,7 +87,7 @@ public class Controller {
         codeArea.setId("codeArea");
         startTab.getChildren().addAll(codeArea);
 
-        DB db = new DB();
+        DB db = DB.getInstance();
 
         allCurrentlyOpenFiles = db.getAllOpenedFiles();
         allClosedFiles = db.getAllClosedFiles();
@@ -117,7 +120,7 @@ public class Controller {
         registerFilterEvent();
 
         populateDBLocation();
-        logger.info("start version 1.0.6");
+        logger.info("start version 1.0.9");
     }
 
     private void populateDBLocation() {
@@ -134,7 +137,7 @@ public class Controller {
 
 
     private void loadLastOpenedFile() throws SQLException {
-        DB db = new DB();
+        DB db = DB.getInstance();
         UserFile f = null;
         f = db.getLastOpenedFile();
         if (f == null) {
@@ -153,7 +156,7 @@ public class Controller {
     }
 
     private void currentFilesListViewEventHandler() {
-
+        logger.info("handling current files listview events");
         currentFilesLV.setOnMouseClicked(event -> {
             UserFile f = currentFilesLV.getSelectionModel().getSelectedItem();
             if (f == null) {
@@ -189,7 +192,7 @@ public class Controller {
             }
 
             try {
-                DB db = new DB();
+                DB db = DB.getInstance();
                 db.updateFileOpenStatus(f.getId(), 1);
                 //add this file to the current file list
                 currentFilesLV.getItems().add(f);
@@ -250,9 +253,17 @@ public class Controller {
     }
 
     public void toggleWrap() {
-        StaticResource.codeArea.setWrapText(wrapTexCheckbox.isSelected());
+        StaticResource.codeArea.setWrapText(wrapTextCheckbox.isSelected());
     }
 
+
+    public void toggleLightTheme() {
+       if (useLightThemeCheckbox.isSelected()) {
+           rootPane.getScene().getStylesheets().remove(0);
+       } else {
+           rootPane.getScene().getStylesheets().add(Objects.requireNonNull(getClass().getClassLoader().getResource("style-dark.css").toExternalForm()));
+       }
+    }
     public void changeDbLocation() {
         FileChooser chooser = new FileChooser();
         File f = chooser.showOpenDialog(rootPane.getScene().getWindow());

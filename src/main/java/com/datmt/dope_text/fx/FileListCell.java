@@ -32,7 +32,7 @@ public class FileListCell extends TextFieldListCell<UserFile> {
                 file.setFileName(string);
                 try {
                     StaticResource.stage.setTitle(file.getFileName() + " | Dope Text");
-                    DB db = new DB();
+                    DB db = DB.getInstance();
                     db.updateFileName(file.getId(), string);
                 } catch (SQLException ex) {
                     ex.printStackTrace();

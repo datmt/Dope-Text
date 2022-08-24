@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.datmt.dope_text.Controller">
+<BorderPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.datmt.dope_text.Controller">
    <center>
       <TabPane tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
         <tabs>
@@ -23,10 +23,11 @@
                         <VBox fx:id="startTab" VBox.vgrow="ALWAYS" />
                         <HBox>
                            <children>
-                              <CheckBox fx:id="wrapTexCheckbox" mnemonicParsing="false" onAction="#toggleWrap" text="Wrap">
+                              <CheckBox fx:id="wrapTextCheckbox" mnemonicParsing="false" onAction="#toggleWrap" text="Wrap">
                                  <HBox.margin>
                                     <Insets bottom="5.0" />
                                  </HBox.margin></CheckBox>
+                              <CheckBox fx:id="useLightThemeCheckbox" mnemonicParsing="false" onAction="#toggleLightTheme" text="Light" />
                            </children>
                         </HBox>
                         <HBox>

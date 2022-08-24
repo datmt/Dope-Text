@@ -25,7 +25,7 @@ public class CurrentFileManager {
         codeArea.scrollToPixel(0, 0);
         StaticResource.currentFile = file;
 
-        DB db = new DB();
+        DB db = DB.getInstance();
         db.updateLastOpenedFile(file.getId());
 
         if (StaticResource.stage != null) {
@@ -45,13 +45,14 @@ public class CurrentFileManager {
             return;
         }
 
+        file.setContent(null);
         file.setContent(StaticResource.codeArea.getText());
         saveCurrentFileToDB(StaticResource.codeArea.getText(), file.getId());
         saveCurrentFileToDisk();
     }
 
     public static void saveCurrentFileToDB(String content, Long fileId) throws SQLException{
-        DB db = new DB();
+        DB db = DB.getInstance();
         db.updateFileContent(fileId, content);
     }
 
@@ -66,7 +67,7 @@ public class CurrentFileManager {
     }
 
     public static void updateFilePath(Long fileId, String filePath) throws SQLException {
-        DB db = new DB();
+        DB db = DB.getInstance();
         db.updateLocalFilePath(fileId, filePath);
     }
 
@@ -94,7 +95,7 @@ public class CurrentFileManager {
 
 
         try {
-            DB db = new DB();
+            DB db = DB.getInstance();
             db.updateFileOpenStatus(StaticResource.currentFile.getId(), 0);
 
             if (StaticResource.currentFilesLV .getItems().size() > 0)

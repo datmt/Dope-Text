@@ -4,7 +4,6 @@ package com.datmt.dope_text.manager;
 import com.datmt.dope_text.db.DB;
 import com.datmt.dope_text.db.model.UserFile;
 import com.datmt.dope_text.helper.FileHelper;
-import com.datmt.dope_text.helper.Log1;
 import javafx.scene.control.ListView;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

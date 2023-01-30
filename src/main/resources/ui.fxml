@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.datmt.dope_text.Controller">
+<BorderPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.datmt.dope_text.Controller">
    <center>
       <TabPane tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
         <tabs>
@@ -32,7 +32,7 @@
                         </HBox>
                         <HBox>
                            <children>
-                              <TextField fx:id="searchTF" promptText="Search" HBox.hgrow="ALWAYS" />
+                              <TextField fx:id="searchTF" onAction="#searchText" promptText="Search" HBox.hgrow="ALWAYS" />
                               <Button fx:id="searchButton" mnemonicParsing="false" onAction="#searchText" text="Search">
                                  <HBox.margin>
                                     <Insets left="5.0" />

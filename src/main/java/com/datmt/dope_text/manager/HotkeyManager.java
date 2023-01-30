@@ -24,17 +24,29 @@ import java.util.UUID;
 
 public class HotkeyManager {
     private static Logger logger = LogManager.getLogger(HotkeyManager.class.getName());
+
     public static void manage(KeyEvent ke, Scene scene) {
-        final KeyCombination save = new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN);
-        final KeyCombination createNew = new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN);
-        final KeyCombination close = new KeyCodeCombination(KeyCode.W, KeyCombination.CONTROL_DOWN);
-        final KeyCombination find = new KeyCodeCombination(KeyCode.F, KeyCombination.CONTROL_DOWN);
-        final KeyCombination export = new KeyCodeCombination(KeyCode.E, KeyCombination.CONTROL_DOWN);
-        final KeyCombination exportAs = new KeyCodeCombination(KeyCode.E, KeyCombination.CONTROL_DOWN, KeyCombination.SHIFT_DOWN);
-        final KeyCombination open = new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN);
-        final KeyCombination quit = new KeyCodeCombination(KeyCode.Q, KeyCombination.CONTROL_DOWN);
-        final KeyCombination increaseSize = new KeyCodeCombination(KeyCode.EQUALS, KeyCombination.CONTROL_DOWN);
-        final KeyCombination decreaseSize = new KeyCodeCombination(KeyCode.MINUS, KeyCombination.CONTROL_DOWN);
+
+        var os = System.getProperty("os.name");
+
+        System.out.println("OS: " + os);
+        var commandKey = KeyCombination.CONTROL_DOWN;
+
+        if (os.contains("Mac")) {
+            commandKey = KeyCombination.META_DOWN;
+        }
+
+
+        final KeyCombination save = new KeyCodeCombination(KeyCode.S, commandKey);
+        final KeyCombination createNew = new KeyCodeCombination(KeyCode.N, commandKey);
+        final KeyCombination close = new KeyCodeCombination(KeyCode.W, commandKey);
+        final KeyCombination find = new KeyCodeCombination(KeyCode.F, commandKey);
+        final KeyCombination export = new KeyCodeCombination(KeyCode.E, commandKey);
+        final KeyCombination exportAs = new KeyCodeCombination(KeyCode.E, commandKey, KeyCombination.SHIFT_DOWN);
+        final KeyCombination open = new KeyCodeCombination(KeyCode.O, commandKey);
+        final KeyCombination quit = new KeyCodeCombination(KeyCode.Q, commandKey);
+        final KeyCombination increaseSize = new KeyCodeCombination(KeyCode.EQUALS, commandKey);
+        final KeyCombination decreaseSize = new KeyCodeCombination(KeyCode.MINUS, commandKey);
 
 
         if (save.match(ke)) {
@@ -115,7 +127,7 @@ public class HotkeyManager {
         ke.consume(); // <-- stops passing the event to next node
     }
 
-    private static void closeCurrentFile(KeyEvent ke, Scene scene)  {
+    private static void closeCurrentFile(KeyEvent ke, Scene scene) {
         CurrentFileManager.closeCurrentFile();
         if (StaticResource.currentFilesLV != null && StaticResource.currentFilesLV.getItems().size() > 0) {
             try {
@@ -140,8 +152,8 @@ public class HotkeyManager {
 
             UserFile f = db.createFile("", "new dope-text-" + UUID.randomUUID().toString().replace("-", "").substring(0, 5));
 
-            StaticResource.currentFilesLV .getItems().add(f);
-            StaticResource.currentFilesLV .getSelectionModel().select(f);
+            StaticResource.currentFilesLV.getItems().add(f);
+            StaticResource.currentFilesLV.getSelectionModel().select(f);
             CurrentFileManager.updateCurrentlyOpenedFile(f);
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -195,8 +207,8 @@ public class HotkeyManager {
                 db.updateLocalFilePath(newFile.getId(), f.getAbsolutePath());
                 newFile.setLocalPath(f.getAbsolutePath());
 
-                StaticResource.currentFilesLV .getItems().add(newFile);
-                StaticResource.currentFilesLV .getSelectionModel().select(newFile);
+                StaticResource.currentFilesLV.getItems().add(newFile);
+                StaticResource.currentFilesLV.getSelectionModel().select(newFile);
 
                 CurrentFileManager.updateCurrentlyOpenedFile(newFile);
                 CurrentFileManager.selectCurrentFileById(newFile.getId());

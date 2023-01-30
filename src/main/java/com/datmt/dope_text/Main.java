@@ -10,6 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
+import java.awt.*;
 import java.util.Objects;
 
 public class Main extends Application {
@@ -25,11 +26,23 @@ public class Main extends Application {
 
         StaticResource.scene = scene;
 
-        primaryStage.getIcons().addAll(
-                new Image("logo128.png"),
-                new Image("logo64.png"),
-                new Image("logo32.png")
-        );
+        //Set icon on the application bar
+        var appIcon = new Image("/images/icon.png");
+        primaryStage.getIcons().add(appIcon);
+
+        //Set icon on the taskbar/dock
+        if (Taskbar.isTaskbarSupported()) {
+            var taskbar = Taskbar.getTaskbar();
+
+            if (taskbar.isSupported(Taskbar.Feature.ICON_IMAGE)) {
+                final Toolkit defaultToolkit = Toolkit.getDefaultToolkit();
+                var dockIcon = defaultToolkit.getImage(getClass().getResource("/images/icon.png"));
+                taskbar.setIconImage(dockIcon);
+            }
+
+        }
+
+
         primaryStage.setScene(scene);
         primaryStage.setMaximized(true);
         primaryStage.show();

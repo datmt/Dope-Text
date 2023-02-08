@@ -44,7 +44,9 @@ public class DB {
     }
 
     private String getDBConnectionString() {
-        if (UserPrefs.getDbLocation() == null || UserPrefs.getDbLocation().trim().equals("") && !new File(UserPrefs.getDbLocation()).exists()) {
+        if (UserPrefs.getDbLocation() == null ||
+                UserPrefs.getDbLocation().trim().equals("") ||
+                !new File(UserPrefs.getDbLocation()).exists()) {
             File f = new File("dope_text.db");
             UserPrefs.setDbLocation(f.getAbsolutePath());
             return "jdbc:sqlite:" + f.getAbsolutePath();
